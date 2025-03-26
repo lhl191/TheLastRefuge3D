@@ -9,6 +9,7 @@ public class EnemyAI : MonoBehaviour
     private Animator animator;
     private int currentWaypoint = 0;
     private bool isChasing = false; // Đang đuổi theo Player
+    private bool isAttacking = false; // Đang tấn công Player
 
     public float chaseRange = 10f; // Khoảng cách phát hiện Player
     public float attackRange = 2f; // Khoảng cách tấn công Player
@@ -19,80 +20,75 @@ public class EnemyAI : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-
-        // Kiểm tra Enemy có đứng trên NavMesh không
-        if (!agent.isOnNavMesh)
-        {
-            Debug.LogError("Enemy is NOT on a NavMesh! Hãy kiểm tra vị trí của Enemy.");
-        }
     }
 
     void Update()
     {
-        if (!agent.isOnNavMesh) return; // Nếu chưa đứng trên NavMesh, không làm gì cả
-
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (distanceToPlayer <= chaseRange)
+        if (distanceToPlayer <= attackRange)
         {
-            ChasePlayer();
+            AttackPlayer(); // Nếu Player vào phạm vi tấn công, dừng lại và đánh
+        }
+        else if (distanceToPlayer <= chaseRange)
+        {
+            ChasePlayer(); // Nếu Player trong phạm vi đuổi, bắt đầu đuổi theo
         }
         else
         {
-            Patrol();
+            Patrol(); // Nếu không thấy Player, tuần tra
         }
 
         animator.SetFloat("Run", agent.velocity.magnitude);
-
     }
 
-    // 🏃 Đuổi theo Player nếu trong phạm vi
+    // 🏃 Enemy chỉ đuổi theo Player nếu Player vào phạm vi Chase
     void ChasePlayer()
     {
-        if (player == null) return;
+        if (player == null || isAttacking) return; // Nếu đang đánh thì không chạy
 
         isChasing = true;
         agent.isStopped = false;
         agent.SetDestination(player.position);
-
-        // Nếu đến gần Player, tấn công
-        if (Vector3.Distance(transform.position, player.position) <= attackRange)
-        {
-            AttackPlayer();
-        }
     }
 
-    // ⚔️ Tấn công khi đến gần Player
+    // ⚔️ Enemy tấn công Player và không di chuyển khi đánh
     void AttackPlayer()
     {
-        agent.isStopped = true; // Dừng di chuyển khi tấn công
-        animator.SetTrigger("Attack"); // Chạy animation tấn công
-        Debug.Log("Enemy attacks!");
+        if (isAttacking) return;
+
+        isAttacking = true;
+        agent.isStopped = true;
+
+        // Quay Enemy hướng về Player
+        Vector3 direction = (player.position - transform.position).normalized;
+        transform.rotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+
+        animator.SetTrigger("Attack");
+        Invoke("ResetAttack", 1.5f);
     }
 
-    // 🚶 Tuần tra nếu không thấy Player
+
+    void ResetAttack()
+    {
+        isAttacking = false;
+        agent.isStopped = false; // Sau khi đánh xong, có thể đuổi theo tiếp nếu cần
+    }
+
+    // 🚶 Enemy tuần tra nếu không thấy Player
     void Patrol()
     {
-        if (waypoints.Length == 0) return;
+        if (waypoints.Length == 0 || isChasing || isAttacking) return; // Không tuần tra nếu đang đuổi hoặc đánh
 
-        if (!isChasing)
+        if (!agent.pathPending && agent.remainingDistance < 0.5f)
         {
-            if (!agent.pathPending && agent.remainingDistance < 0.5f)
+            patrolTimer += Time.deltaTime;
+            if (patrolTimer >= patrolWaitTime)
             {
-                patrolTimer += Time.deltaTime;
-
-                if (patrolTimer >= patrolWaitTime)
-                {
-                    patrolTimer = 0f;
-                    currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
-                    agent.SetDestination(waypoints[currentWaypoint].position);
-                }
+                patrolTimer = 0f;
+                currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
+                agent.SetDestination(waypoints[currentWaypoint].position);
             }
-        }
-        else
-        {
-            isChasing = false;
-            agent.isStopped = false;
         }
     }
 }
