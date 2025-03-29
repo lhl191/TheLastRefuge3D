@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class WeaponController : MonoBehaviour
 {
@@ -6,16 +7,41 @@ public class WeaponController : MonoBehaviour
     public GameObject axePrefab;
     public GameObject bowPrefab;
     public Transform rightHandTransform;
+    public Transform leftHandTransform;
     public GameObject arrowPrefab;
     public Transform arrowSpawnPoint;
+    private ThirdPersonController playerController;
+
 
     private GameObject currentWeapon;
-    private string currentWeaponType = "noWeapon";
-    private bool isAttacking = false; // 🔹 Kiểm soát trạng thái tấn công
+    public string currentWeaponType = "noWeapon";
+    private bool isAttacking = false;
+
+    void Start()
+    {
+        playerController = FindFirstObjectByType<ThirdPersonController>(); // Lấy reference đến PlayerController
+
+        if (characterAnimator == null)
+        {
+            characterAnimator = GetComponent<Animator>();
+        }
+
+        characterAnimator.ResetTrigger("AttackAxe");
+        characterAnimator.ResetTrigger("ShootBow");
+
+        isAttacking = false;  // 🔹 Đảm bảo không bị khóa ngay từ đầu
+
+        if (currentWeaponType != "noWeapon")
+        {
+            SetWeapon(currentWeaponType);
+        }
+    }
+
+
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !isAttacking) // 🔹 Chỉ cho phép tấn công khi chưa có animation đang chạy
+        if (Input.GetMouseButtonDown(0) && !isAttacking && currentWeaponType != "noWeapon")
         {
             Attack();
         }
@@ -36,9 +62,9 @@ public class WeaponController : MonoBehaviour
         }
         else if (weaponType == "archery")
         {
-            currentWeapon = Instantiate(bowPrefab, rightHandTransform);
-            currentWeapon.transform.localPosition = new Vector3(0f, 0.1f, 0.05f);
-            currentWeapon.transform.localRotation = Quaternion.Euler(0f, 170f, -80f);
+            currentWeapon = Instantiate(bowPrefab, leftHandTransform);
+            currentWeapon.transform.localPosition = new Vector3(0f, 0.045f, 0f);
+            currentWeapon.transform.localRotation = Quaternion.Euler(50f, 170f, -105f);
         }
         else
         {
@@ -46,13 +72,18 @@ public class WeaponController : MonoBehaviour
         }
 
         currentWeaponType = weaponType;
+        isAttacking = false; 
     }
+
 
     void Attack()
     {
-        if (characterAnimator == null) return;
+      
+        if (characterAnimator == null || isAttacking) return;
 
-        isAttacking = true; // 🔹 Ngăn chặn spam attack
+        isAttacking = true;
+        if (playerController != null)
+            playerController.isAttacking = true;
 
         if (currentWeaponType == "axe")
         {
@@ -61,26 +92,62 @@ public class WeaponController : MonoBehaviour
         else if (currentWeaponType == "archery")
         {
             characterAnimator.SetTrigger("ShootBow");
-            ShootArrow();
+            StartCoroutine(ShootArrowWithDelay(1f));
         }
+    }
+
+
+
+
+    IEnumerator ShootArrowWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ShootArrow();
     }
 
     void ShootArrow()
     {
         if (arrowPrefab != null && arrowSpawnPoint != null)
         {
-            GameObject arrow = Instantiate(arrowPrefab, arrowSpawnPoint.position, arrowSpawnPoint.rotation);
+            Transform cam = Camera.main.transform;
+            Vector3 shootDirection = cam.forward; // Mặc định bắn thẳng theo hướng camera
+
+            RaycastHit hit;
+            if (Physics.Raycast(cam.position, cam.forward, out hit, 100f))
+            {
+                // Nếu raycast trúng mục tiêu, ta vẫn giữ hướng gốc nhưng không đổi khi va chạm
+                shootDirection = (hit.point - arrowSpawnPoint.position).normalized;
+            }
+
+            // 🔹 Tạo mũi tên với góc xoay đúng
+            Quaternion arrowRotation = Quaternion.LookRotation(shootDirection) * Quaternion.Euler(90, 0, 0);
+            GameObject arrow = Instantiate(arrowPrefab, arrowSpawnPoint.position, arrowRotation);
+
+            // 🔹 Lấy Rigidbody và thiết lập bay thẳng
             Rigidbody rb = arrow.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                rb.linearVelocity = arrowSpawnPoint.forward * 25f;
+                rb.collisionDetectionMode = CollisionDetectionMode.Continuous; // Giúp va chạm chính xác
+                rb.linearVelocity = shootDirection * 50f; // Bay thẳng, không đổi hướng
+            }
+
+            // 🔹 Kiểm tra nếu arrow có Collider, đảm bảo trigger để tính dame
+            Collider arrowCollider = arrow.GetComponent<Collider>();
+            if (arrowCollider != null)
+            {
+                arrowCollider.isTrigger = true; // Để tính sát thương nhưng không đổi hướng khi va chạm
             }
         }
     }
 
-    // 🔹 Gọi từ Animation Event khi animation kết thúc
+
+
     public void EndAttackAnimation()
     {
-        isAttacking = false; 
+        isAttacking = false;
+        if (playerController != null)
+            playerController.isAttacking = false; // 🔹 Cho phép di chuyển lại
     }
+
+
 }

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 358ab905eda78384c96daf9ec16c22c2
+timeCreated: 1474683534
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 12555
+  packageName: Outdoor Ground Textures
+  packageVersion: 1.2.1
+  assetPath: Assets/ADG_Textures/ground_vol1/ground12/ground12.mat
+  uploadId: 410572

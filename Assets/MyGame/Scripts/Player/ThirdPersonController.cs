@@ -18,6 +18,9 @@ public class ThirdPersonController : MonoBehaviour
     private bool inputJump;
     private bool inputSprint;
     private bool inputCrouch; // Thêm biến kiểm tra phím ngồi
+    public bool isAttacking = false;
+
+
 
     private Animator animator;
     private CharacterController cc;
@@ -41,23 +44,39 @@ public class ThirdPersonController : MonoBehaviour
         inputVertical = Input.GetAxis("Vertical");
         inputJump = Input.GetKeyDown(KeyCode.Space);
         inputSprint = Input.GetAxis("Fire3") == 1f;
-        inputCrouch = Input.GetKey(KeyCode.LeftControl); 
-      
+        inputCrouch = Input.GetKey(KeyCode.LeftControl);
+
+        if (isAttacking)
+        {
+            inputHorizontal = 0;
+            inputVertical = 0;
+            inputJump = false;
+            inputSprint = false;
+            inputCrouch = false;
+            return;
+        }
+
 
         // Cập nhật trạng thái ngồi
         isCrouching = inputCrouch;
         animator.SetBool("crouch", isCrouching);
 
+        if (Input.GetMouseButtonDown(0) && weaponController != null && weaponController.currentWeaponType == "archery")
+        {
+            // Nhân vật xoay theo hướng camera khi bắn
+            transform.rotation = Quaternion.Euler(0f, Camera.main.transform.eulerAngles.y, 0f);
+        }
+
         // **Thay đổi vũ khí bằng phím số**
-        if (Input.GetKeyDown(KeyCode.Alpha1)) 
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             SwitchWeapon("axe");
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2)) 
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             SwitchWeapon("archery");
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha3)) 
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             SwitchWeapon("noWeapon");
         }
@@ -80,8 +99,11 @@ public class ThirdPersonController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isAttacking) return;
+
         float velocityAdittion = isSprinting ? sprintAdittion : 0;
         velocityAdittion -= isCrouching ? velocity * 0.5f : 0; // Giảm tốc độ khi ngồi
+
 
         // **Thay đổi chiều cao của CharacterController khi ngồi**
         cc.height = isCrouching ? 1f : 2f;
