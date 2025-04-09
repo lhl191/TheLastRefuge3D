@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class ThirdPersonController : MonoBehaviour
 {
     public float velocity = 5f;
     public float sprintAdittion = 3.5f;
     public float jumpForce = 5f;
-    public float jumpTime = 0.6f;
+    public float jumpTime = 1f;
     public float gravity = 9.8f;
 
     private float jumpElapsedTime = 0;
@@ -19,6 +20,9 @@ public class ThirdPersonController : MonoBehaviour
     private bool inputSprint;
     private bool inputCrouch; // Thêm biến kiểm tra phím ngồi
     public bool isAttacking = false;
+    private bool isDead = false;
+    private bool isPickingUp = false;
+   
 
 
 
@@ -27,6 +31,7 @@ public class ThirdPersonController : MonoBehaviour
     private WeaponController weaponController; // Thêm biến để điều khiển vũ khí
 
     private GameObject currentWeapon; // Vũ khí hiện tại
+    private InteractableObjects nearObject = null;
 
     void Start()
     {
@@ -46,6 +51,14 @@ public class ThirdPersonController : MonoBehaviour
         inputSprint = Input.GetAxis("Fire3") == 1f;
         inputCrouch = Input.GetKey(KeyCode.LeftControl);
 
+        if (Input.GetKeyDown(KeyCode.E) && nearObject != null)
+        {
+            nearObject.Interact();
+        }
+        if (Input.GetKeyDown(KeyCode.E) && nearObject != null && !isPickingUp)
+        {
+            StartCoroutine(PickupCoroutine());
+        }
         if (isAttacking)
         {
             inputHorizontal = 0;
@@ -152,4 +165,54 @@ public class ThirdPersonController : MonoBehaviour
             weaponController.SetWeapon(weaponType);
         }
     }
+    public void KillPlayer()
+    {
+        StartCoroutine(DieCoroutine());
+    }
+    IEnumerator DieCoroutine()
+    {
+        isDead = true;
+        animator.SetBool("Die", true);
+        cc.enabled = false;  // Tắt CharacterController để ngăn di chuyển
+
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+
+        this.enabled = false; // Vô hiệu hóa script sau khi animation kết thúc
+    }
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Interactable")) 
+        {
+            nearObject = other.GetComponent<InteractableObjects>();
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Interactable"))
+        {
+            nearObject = null;
+        }
+    }
+    IEnumerator PickupCoroutine()
+    {
+        isPickingUp = true;
+        animator.SetTrigger("pickUp"); // Gửi tín hiệu chạy animation
+
+        yield return new WaitForSeconds(0.5f); // Thời gian animation nhặt đồ
+
+        if (nearObject != null)
+        {
+            if (nearObject.interactUI != null)
+            {
+                nearObject.interactUI.SetActive(false); // Ẩn UI trước khi nhặt
+            }
+
+            nearObject.Interact();
+            nearObject = null; // Xóa reference để tránh lỗi
+        }
+
+        isPickingUp = false;
+    }
+
 }

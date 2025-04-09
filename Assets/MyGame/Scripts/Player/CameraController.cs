@@ -23,7 +23,7 @@ public class CameraController : MonoBehaviour
     public float sensitivity = 5f;
 
     [Tooltip("Camera Y rotation limits. The X axis is the maximum it can go up and the Y axis is the maximum it can go down.")]
-    public Vector2 cameraLimit = new Vector2(-45, 40);
+    public Vector2 cameraLimit = new Vector2(0, 80);
 
     float mouseX;
     float mouseY;

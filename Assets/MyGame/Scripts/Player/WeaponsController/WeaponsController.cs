@@ -72,13 +72,15 @@ public class WeaponController : MonoBehaviour
         }
 
         currentWeaponType = weaponType;
-        isAttacking = false; 
+        isAttacking = false;
+
+       
     }
+
 
 
     void Attack()
     {
-      
         if (characterAnimator == null || isAttacking) return;
 
         isAttacking = true;
@@ -88,6 +90,7 @@ public class WeaponController : MonoBehaviour
         if (currentWeaponType == "axe")
         {
             characterAnimator.SetTrigger("AttackAxe");
+            StartCoroutine(AxeDamageRaycast(0.5f)); 
         }
         else if (currentWeaponType == "archery")
         {
@@ -95,15 +98,25 @@ public class WeaponController : MonoBehaviour
             StartCoroutine(ShootArrowWithDelay(1f));
         }
     }
-
-
-
-
-    IEnumerator ShootArrowWithDelay(float delay)
+    IEnumerator AxeDamageRaycast(float delay)
     {
         yield return new WaitForSeconds(delay);
-        ShootArrow();
+
+        RaycastHit hit;
+        if (Physics.Raycast(playerController.transform.position + Vector3.up * 1f, playerController.transform.forward, out hit, 2f))
+        {
+            if (hit.collider.CompareTag("Enemy"))
+            {
+                EnemyHealth enemyHealth = hit.collider.GetComponent<EnemyHealth>();
+                if (enemyHealth != null)
+                {
+                    enemyHealth.TakeDamage(40f); // Sát thương rìu
+                }
+            }
+        }
     }
+
+
 
     void ShootArrow()
     {
@@ -137,10 +150,17 @@ public class WeaponController : MonoBehaviour
             {
                 arrowCollider.isTrigger = true; // Để tính sát thương nhưng không đổi hướng khi va chạm
             }
+     
+            Destroy(arrow, 5f);
         }
     }
 
 
+    IEnumerator ShootArrowWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ShootArrow();
+    }
 
     public void EndAttackAnimation()
     {
