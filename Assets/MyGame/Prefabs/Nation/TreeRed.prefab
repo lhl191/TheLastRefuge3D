@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1130389787187408747}
   - component: {fileID: 2459450697049023654}
   - component: {fileID: 511257849271867191}
+  - component: {fileID: 5070270764515882747}
   m_Layer: 0
   m_Name: TreeRed
   m_TagString: Untagged
@@ -99,7 +100,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 743d8099b9e452a4bb92acffe5746c1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectType: 1
+  objectType: 0
+  interactUI: {fileID: 0}
+--- !u!114 &5070270764515882747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 289000273352042005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e6295d56fcb6964c8cd9013cf1aab0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoints: 3
+  woodPerHit: 3
 --- !u!1 &1220029384735841839
 GameObject:
   m_ObjectHideFlags: 0

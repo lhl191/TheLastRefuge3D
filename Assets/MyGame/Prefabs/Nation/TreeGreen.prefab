@@ -273,6 +273,7 @@ GameObject:
   - component: {fileID: 7371131791915006307}
   - component: {fileID: 4462759094747807017}
   - component: {fileID: 5632985682912095606}
+  - component: {fileID: 3983219654892581023}
   m_Layer: 0
   m_Name: TreeGreen
   m_TagString: Untagged
@@ -361,3 +362,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectType: 0
+  interactUI: {fileID: 0}
+--- !u!114 &3983219654892581023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5090423287364717143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e6295d56fcb6964c8cd9013cf1aab0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoints: 3
+  woodPerHit: 3

@@ -51,6 +51,8 @@ public class ThirdPersonController : MonoBehaviour
         inputSprint = Input.GetAxis("Fire3") == 1f;
         inputCrouch = Input.GetKey(KeyCode.LeftControl);
 
+        if (isDead) return;
+
         if (Input.GetKeyDown(KeyCode.E) && nearObject != null)
         {
             nearObject.Interact();

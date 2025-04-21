@@ -105,14 +105,32 @@ public class WeaponController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(playerController.transform.position + Vector3.up * 1f, playerController.transform.forward, out hit, 2f))
         {
-            if (hit.collider.CompareTag("Enemy"))
+            if (hit.collider.CompareTag("Enemy") || hit.collider.CompareTag("Boss") || hit.collider.CompareTag("Animal"))
             {
                 EnemyHealth enemyHealth = hit.collider.GetComponent<EnemyHealth>();
                 if (enemyHealth != null)
                 {
-                    enemyHealth.TakeDamage(40f); // Sát thương rìu
+                    enemyHealth.TakeDamage(40f);
+                }
+
+                BossHealth bossHealth = hit.collider.GetComponent<BossHealth>();
+                if (bossHealth != null)
+                {
+                    bossHealth.TakeDamage(40f);
+                }
+
+                AnimalHealth animalHealth = hit.collider.GetComponent<AnimalHealth>();
+                if (animalHealth != null)
+                {
+                    animalHealth.TakeDamage(40f);
                 }
             }
+            TreeResource tree = hit.collider.GetComponent<TreeResource>();
+            if (tree != null)
+            {
+                tree.ChopTree();  // Gọi hàm chặt cây
+            }
+
         }
     }
 

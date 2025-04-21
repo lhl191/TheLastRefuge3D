@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: KillBeast
   m_EditorClassIdentifier: 
   missionName: Kill Beast
-  description: Kill Beast in 3 Minute. Hurry up!
+  description: Kill 1 Beast in 3 Minute. Hurry up!
   missionType: 3
   requiredAmount: 1
   timeLimit: 60

@@ -10,6 +10,9 @@ public class MissionManager : MonoBehaviour
     private float timer;
     private bool missionActive = false;
 
+    public GameObject stealthSoundPrefab;
+    private GameObject activeSoundObj;
+
     public enum MissionState { NotStarted, InProgress, Completed, Failed }
     public MissionState missionState = MissionState.NotStarted;
 
@@ -25,15 +28,26 @@ public class MissionManager : MonoBehaviour
 
     void Update()
     {
-        if (missionActive && currentMission.timeLimit > 0)
+        if (!missionActive) return;
+
+        if (missionState == MissionState.InProgress && currentMission.timeLimit > 0)
         {
             timer -= Time.deltaTime;
+
+            // Nếu hết thời gian mà chưa hoàn thành
             if (timer <= 0 && progress < currentMission.requiredAmount)
             {
-                MissionFailed(); // Hết thời gian nhưng chưa xong => Chết
+                MissionFailed();
+            }
+
+            // Nếu hết thời gian và nhiệm vụ đã hoàn thành → gán nhiệm vụ mới
+            if (timer <= 0 && missionState == MissionState.Completed)
+            {
+                AssignNewMission();
             }
         }
     }
+
 
     public void AssignNewMission()
     {
@@ -45,6 +59,26 @@ public class MissionManager : MonoBehaviour
         missionState = MissionState.InProgress;
 
         Debug.Log($"🎯 NEW MISSION: {currentMission.missionName} - {currentMission.description}");
+
+        // Nếu là nhiệm vụ stealth → bật âm thanh
+        if (currentMission.missionType == MissionData.MissionType.StealthSurvive)
+        {
+            SpawnStealthSound();
+        }
+    }
+    void SpawnStealthSound()
+    {
+        if (activeSoundObj != null) Destroy(activeSoundObj);
+
+        Transform playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        activeSoundObj = Instantiate(stealthSoundPrefab, playerTransform);
+        activeSoundObj.transform.localPosition = Vector3.zero;
+
+        AudioSource source = activeSoundObj.GetComponent<AudioSource>();
+        if (source != null)
+        {
+            source.Play();
+        }
     }
 
     public void UpdateProgress()
@@ -65,26 +99,33 @@ public class MissionManager : MonoBehaviour
     }
     void MissionCompleted()
     {
-        Debug.Log($" MISSION SUCCES: {currentMission.missionName}!");
-        missionActive = false;
+        Debug.Log($" MISSION SUCCESS: {currentMission.missionName}!");
         missionState = MissionState.Completed;
-        AssignNewMission();
+
+        RemoveStealthSound(); // 👈 Khi hoàn thành nhiệm vụ
     }
+
 
     public void MissionFailed()
     {
         Debug.Log($" TIME OUT! MISSION FAILED! : {currentMission.missionName}...");
 
-        // Tìm PlayerController và gọi KillPlayer()
         ThirdPersonController player = FindFirstObjectByType<ThirdPersonController>();
-        if (player != null)
-        {
-            player.KillPlayer();
-        }
+        if (player != null) player.KillPlayer();
 
         missionActive = false;
         missionState = MissionState.Failed;
         GameManager.Instance.OnPlayerMissionFailed();
+
+        RemoveStealthSound(); // 👈 Khi nhiệm vụ fail
+    }
+    void RemoveStealthSound()
+    {
+        if (activeSoundObj != null)
+        {
+            Destroy(activeSoundObj);
+            activeSoundObj = null;
+        }
     }
 
     public MissionData GetCurrentMission() => currentMission;

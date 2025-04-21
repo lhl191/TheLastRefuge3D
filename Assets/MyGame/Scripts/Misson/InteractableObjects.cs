@@ -5,7 +5,7 @@ public class InteractableObjects : MonoBehaviour
     public enum ObjectType { Tree, Rock, Fruit, Animal, Beast, EnemyPlayer, Item }
     public ObjectType objectType;
 
-    public GameObject interactUI; 
+    public GameObject interactUI;
 
     void Start()
     {
@@ -35,6 +35,14 @@ public class InteractableObjects : MonoBehaviour
         MissionData mission = MissionManager.Instance.GetCurrentMission();
         if (mission == null) return;
 
+
+        if (objectType == ObjectType.Tree)
+        {
+            GetComponent<TreeResource>()?.ChopTree();
+            return; // Không phá luôn cây
+        }
+
+
         if (interactUI != null)
         {
             interactUI.SetActive(false); // Ẩn UI trước khi hủy object
@@ -57,7 +65,7 @@ public class InteractableObjects : MonoBehaviour
 
     private bool IsCorrectInteraction(MissionData.MissionType missionType)
     {
-       
+
         return (objectType == ObjectType.Tree || objectType == ObjectType.Rock || objectType == ObjectType.Fruit) && missionType == MissionData.MissionType.Collect
             || objectType == ObjectType.Animal && missionType == MissionData.MissionType.HuntAnimal
             || objectType == ObjectType.Beast && missionType == MissionData.MissionType.KillBeast
@@ -65,6 +73,6 @@ public class InteractableObjects : MonoBehaviour
             || objectType == ObjectType.Item && missionType == MissionData.MissionType.FindItem;
 
     }
-    
+
 
 }

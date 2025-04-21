@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: KillAnimal
   m_EditorClassIdentifier: 
   missionName: Kill Animal
-  description: Kill Animal in 3 Minute.
+  description: Kill 1 Animal in 3 Minute.
   missionType: 2
   requiredAmount: 1
   timeLimit: 60

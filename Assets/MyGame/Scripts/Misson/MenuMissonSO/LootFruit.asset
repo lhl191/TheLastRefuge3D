@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LootFruit
   m_EditorClassIdentifier: 
   missionName: Loot Fruit
-  description: Loot Fruit in 3 Minute.
+  description: Loot 1 Fruit !!
   missionType: 1
   requiredAmount: 1
   timeLimit: 60

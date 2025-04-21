@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc0419d70fb71d44b9d91152b381f560, type: 3}
   m_Name: FarmWood
   m_EditorClassIdentifier: 
-  missionName: FarmWood
-  description: Farm Wood in 3 Minute.
+  missionName: Farm-Collect Wood
+  description: Farm or Collect 10 Wood !
   missionType: 1
   requiredAmount: 10
   timeLimit: 60
