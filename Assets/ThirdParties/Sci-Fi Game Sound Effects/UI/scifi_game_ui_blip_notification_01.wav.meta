@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: b0ccfaa91ee68467a9b7c0942dfa0cdb
+AudioImporter:
+  externalObjects: {}
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 0
+    sampleRateSetting: 0
+    sampleRateOverride: 44100
+    compressionFormat: 1
+    quality: 1
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  normalize: 1
+  preloadAudioData: 1
+  loadInBackground: 0
+  ambisonic: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 260627
+  packageName: Sci-Fi Game Sound Effects
+  packageVersion: 1.0
+  assetPath: Assets/Sci-Fi Game Sound Effects/UI/scifi_game_ui_blip_notification_01.wav
+  uploadId: 614245

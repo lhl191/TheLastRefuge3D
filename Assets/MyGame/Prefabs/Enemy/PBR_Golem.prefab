@@ -470,6 +470,8 @@ MonoBehaviour:
   maxHealth: 100
   isDead: 0
   objectType: 3
+  hitByAxeEffectPrefab: {fileID: 8085065028046660701, guid: 35f3a80ff3d6c4048b47702734716cb3, type: 3}
+  hitByArrowEffectPrefab: {fileID: 3743929941838266515, guid: ebe6bfb1ecbc0444abc68b12b44e0152, type: 3}
 --- !u!114 &2028485671884085912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -483,7 +485,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionRange: 30
-  attackRange: 2
+  attackRange: 2.5
   attackCooldown: 2
   damage: 20
 --- !u!114 &6327946652947455631

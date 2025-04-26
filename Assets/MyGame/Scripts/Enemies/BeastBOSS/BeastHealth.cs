@@ -12,6 +12,9 @@ public class BossHealth : MonoBehaviour
     private BossAI bossAI;
     private bool isDead = false;
 
+    public GameObject hitByAxeEffectPrefab;
+    public GameObject hitByArrowEffectPrefab;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -20,13 +23,23 @@ public class BossHealth : MonoBehaviour
         bossAI = GetComponent<BossAI>();
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, string weaponType)
     {
         if (isDead) return;
 
         currentHealth -= damage;
 
-        if (currentHealth <= 0f)
+        // 🛠 Spawn effect theo weaponType
+        if (weaponType == "axe" && hitByAxeEffectPrefab != null)
+        {
+            Instantiate(hitByAxeEffectPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+        }
+        else if (weaponType == "arrow" && hitByArrowEffectPrefab != null)
+        {
+            Instantiate(hitByArrowEffectPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+        }
+
+        if (currentHealth <= 0)
         {
             Die();
         }
@@ -35,6 +48,7 @@ public class BossHealth : MonoBehaviour
             animator.SetTrigger("GetHit");
         }
     }
+
 
     private void Die()
     {

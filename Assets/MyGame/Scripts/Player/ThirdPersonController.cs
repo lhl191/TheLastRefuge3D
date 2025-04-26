@@ -18,29 +18,38 @@ public class ThirdPersonController : MonoBehaviour
     private float inputVertical;
     private bool inputJump;
     private bool inputSprint;
-    private bool inputCrouch; // Thêm biến kiểm tra phím ngồi
+    private bool inputCrouch; 
     public bool isAttacking = false;
     private bool isDead = false;
     private bool isPickingUp = false;
-   
 
+    [Header("Footstep Sounds")]
+    public AudioClip walkSound;
+    public AudioClip runSound;
+    private AudioSource audioSource;
 
 
     private Animator animator;
     private CharacterController cc;
-    private WeaponController weaponController; // Thêm biến để điều khiển vũ khí
+    private WeaponController weaponController; 
 
-    private GameObject currentWeapon; // Vũ khí hiện tại
+    private GameObject currentWeapon; 
     private InteractableObjects nearObject = null;
 
     void Start()
     {
         cc = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        weaponController = GetComponent<WeaponController>(); // Lấy WeaponController
+        weaponController = GetComponent<WeaponController>();
+        audioSource = GetComponent<AudioSource>();
+        
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+        audioSource.loop = true; // Loop để tiếng bước chân lặp lại
 
-        if (animator == null)
-            Debug.LogWarning("Không có Animator component, animation sẽ không hoạt động.");
+
     }
 
     void Update()
@@ -72,13 +81,13 @@ public class ThirdPersonController : MonoBehaviour
         }
 
 
-        // Cập nhật trạng thái ngồi
+      
         isCrouching = inputCrouch;
         animator.SetBool("crouch", isCrouching);
 
         if (Input.GetMouseButtonDown(0) && weaponController != null && weaponController.currentWeaponType == "archery")
         {
-            // Nhân vật xoay theo hướng camera khi bắn
+        
             transform.rotation = Quaternion.Euler(0f, Camera.main.transform.eulerAngles.y, 0f);
         }
 
@@ -110,6 +119,7 @@ public class ThirdPersonController : MonoBehaviour
         }
 
         HeadHittingDetect();
+        HandleFootsteps();
     }
 
     private void FixedUpdate()
@@ -149,6 +159,41 @@ public class ThirdPersonController : MonoBehaviour
             }
         }
     }
+    void HandleFootsteps()
+    {
+        if (!cc.isGrounded || isAttacking || isDead)
+        {
+            if (audioSource.isPlaying) audioSource.Stop();
+            return;
+        }
+
+        bool isMoving = Mathf.Abs(inputHorizontal) > 0.1f || Mathf.Abs(inputVertical) > 0.1f;
+
+        if (isMoving)
+        {
+            AudioClip clipToPlay = isSprinting ? runSound : walkSound;
+
+            
+            audioSource.pitch = isSprinting ? 1.1f : 0.9f;
+            // -> 1.1x nhanh khi chạy, 0.9x chậm khi đi bộ
+
+            if (audioSource.clip != clipToPlay)
+            {
+                audioSource.clip = clipToPlay;
+                audioSource.Play();
+            }
+            else if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            if (audioSource.isPlaying) audioSource.Stop();
+        }
+    }
+
+
 
     void HeadHittingDetect()
     {

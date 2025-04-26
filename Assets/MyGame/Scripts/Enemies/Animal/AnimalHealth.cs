@@ -10,6 +10,9 @@ public class AnimalHealth : MonoBehaviour
 
     public InteractableObjects.ObjectType objectType = InteractableObjects.ObjectType.Animal;
 
+    public GameObject hitByAxeEffectPrefab;
+    public GameObject hitByArrowEffectPrefab;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -17,15 +20,26 @@ public class AnimalHealth : MonoBehaviour
         animalAI = GetComponent<AnimalAI>();
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, string weaponType)
     {
         if (isDead) return;
 
         currentHealth -= damage;
 
+        // 🛠 Spawn effect theo weaponType
+        if (weaponType == "axe" && hitByAxeEffectPrefab != null)
+        {
+            Instantiate(hitByAxeEffectPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+        }
+        else if (weaponType == "arrow" && hitByArrowEffectPrefab != null)
+        {
+            Instantiate(hitByArrowEffectPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+        }
+
+        // 🟰 AnimalHealth riêng biệt: bị đánh xong đuổi player
         if (animalAI != null)
         {
-            animalAI.StartChasingPlayer(); // 👉 bắt đầu đuổi theo player
+            animalAI.StartChasingPlayer();
         }
 
         if (currentHealth <= 0)

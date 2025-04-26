@@ -14,7 +14,7 @@ public class ArrowDamage : MonoBehaviour
             EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
             if (enemyHealth != null)
             {
-                enemyHealth.TakeDamage(damage);
+                enemyHealth.TakeDamage(damage, "arrow"); // 🎯 thêm "arrow"
                 hasHit = true;
             }
         }
@@ -23,16 +23,16 @@ public class ArrowDamage : MonoBehaviour
             BossHealth bossHealth = other.GetComponent<BossHealth>();
             if (bossHealth != null)
             {
-                bossHealth.TakeDamage(damage);
+                bossHealth.TakeDamage(damage, "arrow"); // 🎯 thêm "arrow"
                 hasHit = true;
             }
         }
-        if (other.CompareTag("Animal"))
+        else if (other.CompareTag("Animal"))
         {
             AnimalHealth animalHealth = other.GetComponent<AnimalHealth>();
             if (animalHealth != null)
             {
-                animalHealth.TakeDamage(damage);
+                animalHealth.TakeDamage(damage, "arrow"); // 🎯 thêm "arrow"
                 hasHit = true;
             }
         }
@@ -43,4 +43,5 @@ public class ArrowDamage : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
 }

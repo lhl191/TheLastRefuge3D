@@ -1747,7 +1747,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 5685901192439070204}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 3
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -1772,7 +1772,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb358cf216fd2c14392edaf2e692d767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 50
+  maxHealth: 200
+  hitByAxeEffectPrefab: {fileID: 8085065028046660701, guid: 35f3a80ff3d6c4048b47702734716cb3, type: 3}
+  hitByArrowEffectPrefab: {fileID: 3743929941838266515, guid: ebe6bfb1ecbc0444abc68b12b44e0152, type: 3}
 --- !u!114 &538147325179391936
 MonoBehaviour:
   m_ObjectHideFlags: 0

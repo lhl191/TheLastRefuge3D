@@ -8,17 +8,30 @@ public class EnemyHealth : MonoBehaviour
     private Animator animator;
     public bool isDead = false;
 
+    public GameObject hitByAxeEffectPrefab;
+    public GameObject hitByArrowEffectPrefab;
+
     void Start()
     {
         currentHealth = maxHealth;
         animator = GetComponent<Animator>();
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, string weaponType)
     {
         if (isDead) return;
 
         currentHealth -= damage;
+
+       
+        if (weaponType == "axe" && hitByAxeEffectPrefab != null)
+        {
+            Instantiate(hitByAxeEffectPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+        }
+        else if (weaponType == "arrow" && hitByArrowEffectPrefab != null)
+        {
+            Instantiate(hitByArrowEffectPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+        }
 
         if (currentHealth <= 0)
         {
@@ -26,7 +39,7 @@ public class EnemyHealth : MonoBehaviour
         }
         else
         {
-            animator.SetTrigger("Hit"); // Animation bị đánh
+            animator.SetTrigger("Hit");
         }
     }
 
@@ -65,4 +78,3 @@ public class EnemyHealth : MonoBehaviour
 
 
 }
-

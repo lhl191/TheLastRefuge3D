@@ -8,10 +8,15 @@ public class WeaponController : MonoBehaviour
     public GameObject bowPrefab;
     public Transform rightHandTransform;
     public Transform leftHandTransform;
-    public GameObject arrowPrefab;
-    public Transform arrowSpawnPoint;
+
     private ThirdPersonController playerController;
 
+    public GameObject arrowEffectPrefab;
+    public GameObject arrowPrefab;
+    public Transform arrowSpawnPoint;
+    public AudioClip arrowShootSound;
+    public AudioClip axeSwingSound;
+    public AudioClip weaponChangeSound;
 
     private GameObject currentWeapon;
     public string currentWeaponType = "noWeapon";
@@ -29,15 +34,13 @@ public class WeaponController : MonoBehaviour
         characterAnimator.ResetTrigger("AttackAxe");
         characterAnimator.ResetTrigger("ShootBow");
 
-        isAttacking = false;  // 🔹 Đảm bảo không bị khóa ngay từ đầu
+        isAttacking = false; 
 
         if (currentWeaponType != "noWeapon")
         {
             SetWeapon(currentWeaponType);
         }
     }
-
-
 
     void Update()
     {
@@ -75,8 +78,11 @@ public class WeaponController : MonoBehaviour
         isAttacking = false;
 
        
+        if (weaponChangeSound != null)
+        {
+            AudioSource.PlayClipAtPoint(weaponChangeSound, transform.position);
+        }
     }
-
 
 
     void Attack()
@@ -90,7 +96,11 @@ public class WeaponController : MonoBehaviour
         if (currentWeaponType == "axe")
         {
             characterAnimator.SetTrigger("AttackAxe");
-            StartCoroutine(AxeDamageRaycast(0.5f)); 
+
+          
+            StartCoroutine(PlayAxeSwingSoundWithDelay(0.4f));
+
+            StartCoroutine(AxeDamageRaycast(0.5f));
         }
         else if (currentWeaponType == "archery")
         {
@@ -98,94 +108,115 @@ public class WeaponController : MonoBehaviour
             StartCoroutine(ShootArrowWithDelay(1f));
         }
     }
+    IEnumerator PlayAxeSwingSoundWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+     
+        if (axeSwingSound != null)
+        {
+            AudioSource.PlayClipAtPoint(axeSwingSound, transform.position);
+        }
+    }
+
     IEnumerator AxeDamageRaycast(float delay)
     {
         yield return new WaitForSeconds(delay);
 
-        RaycastHit hit;
-        if (Physics.Raycast(playerController.transform.position + Vector3.up * 1f, playerController.transform.forward, out hit, 2f))
+        Collider[] hits = Physics.OverlapSphere(playerController.transform.position + playerController.transform.forward * 1.5f + Vector3.up * 1f, 1f);
+
+        foreach (var hit in hits)
         {
-            if (hit.collider.CompareTag("Enemy") || hit.collider.CompareTag("Boss") || hit.collider.CompareTag("Animal"))
+            if (hit.CompareTag("Enemy"))
             {
-                EnemyHealth enemyHealth = hit.collider.GetComponent<EnemyHealth>();
+                EnemyHealth enemyHealth = hit.GetComponent<EnemyHealth>();
                 if (enemyHealth != null)
-                {
-                    enemyHealth.TakeDamage(40f);
-                }
-
-                BossHealth bossHealth = hit.collider.GetComponent<BossHealth>();
-                if (bossHealth != null)
-                {
-                    bossHealth.TakeDamage(40f);
-                }
-
-                AnimalHealth animalHealth = hit.collider.GetComponent<AnimalHealth>();
-                if (animalHealth != null)
-                {
-                    animalHealth.TakeDamage(40f);
-                }
+                    enemyHealth.TakeDamage(40f, "axe");
             }
-            TreeResource tree = hit.collider.GetComponent<TreeResource>();
-            if (tree != null)
+            else if (hit.CompareTag("Boss"))
             {
-                tree.ChopTree();  // Gọi hàm chặt cây
+                BossHealth bossHealth = hit.GetComponent<BossHealth>();
+                if (bossHealth != null)
+                    bossHealth.TakeDamage(40f, "axe");
             }
-
+            else if (hit.CompareTag("Animal"))
+            {
+                AnimalHealth animalHealth = hit.GetComponent<AnimalHealth>();
+                if (animalHealth != null)
+                    animalHealth.TakeDamage(40f, "axe");
+            }
+            else
+            {
+              
+                TreeResource tree = hit.GetComponent<TreeResource>();
+                if (tree != null)
+                {
+                    tree.ChopTree();
+                }
+            }
         }
     }
 
-
-
-    void ShootArrow()
+    IEnumerator ShootArrowWithDelay(float delay)
     {
+        GameObject arrowEffect = null;
+        if (arrowEffectPrefab != null && arrowSpawnPoint != null)
+        {
+            Vector3 effectOffset = arrowSpawnPoint.forward * 0.6f + arrowSpawnPoint.right * 0.08f + Vector3.up * 0.6f;
+            Vector3 spawnPosition = arrowSpawnPoint.position + effectOffset;
+
+            arrowEffect = Instantiate(arrowEffectPrefab, spawnPosition, arrowSpawnPoint.rotation);
+        }
+
+        yield return new WaitForSeconds(delay);
+
         if (arrowPrefab != null && arrowSpawnPoint != null)
         {
             Transform cam = Camera.main.transform;
-            Vector3 shootDirection = cam.forward; // Mặc định bắn thẳng theo hướng camera
+            Vector3 shootDirection = cam.forward;
 
             RaycastHit hit;
             if (Physics.Raycast(cam.position, cam.forward, out hit, 100f))
             {
-                // Nếu raycast trúng mục tiêu, ta vẫn giữ hướng gốc nhưng không đổi khi va chạm
                 shootDirection = (hit.point - arrowSpawnPoint.position).normalized;
             }
 
-            // 🔹 Tạo mũi tên với góc xoay đúng
             Quaternion arrowRotation = Quaternion.LookRotation(shootDirection) * Quaternion.Euler(90, 0, 0);
             GameObject arrow = Instantiate(arrowPrefab, arrowSpawnPoint.position, arrowRotation);
 
-            // 🔹 Lấy Rigidbody và thiết lập bay thẳng
+           
+            if (arrowShootSound != null)
+            {
+                AudioSource.PlayClipAtPoint(arrowShootSound, arrowSpawnPoint.position);
+            }
+
+            if (arrowEffect != null)
+            {
+                arrowEffect.transform.SetParent(arrow.transform);
+                arrowEffect.transform.localPosition = Vector3.zero;
+            }
+
             Rigidbody rb = arrow.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                rb.collisionDetectionMode = CollisionDetectionMode.Continuous; // Giúp va chạm chính xác
-                rb.linearVelocity = shootDirection * 50f; // Bay thẳng, không đổi hướng
+                rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+                rb.linearVelocity = shootDirection * 50f;
             }
 
-            // 🔹 Kiểm tra nếu arrow có Collider, đảm bảo trigger để tính dame
             Collider arrowCollider = arrow.GetComponent<Collider>();
             if (arrowCollider != null)
             {
-                arrowCollider.isTrigger = true; // Để tính sát thương nhưng không đổi hướng khi va chạm
+                arrowCollider.isTrigger = true;
             }
-     
+
             Destroy(arrow, 5f);
         }
-    }
-
-
-    IEnumerator ShootArrowWithDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        ShootArrow();
     }
 
     public void EndAttackAnimation()
     {
         isAttacking = false;
         if (playerController != null)
-            playerController.isAttacking = false; // 🔹 Cho phép di chuyển lại
+            playerController.isAttacking = false; 
     }
-
-
 }

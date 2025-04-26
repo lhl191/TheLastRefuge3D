@@ -33,7 +33,7 @@ public class AnimalAI : MonoBehaviour
         {
             if (distance <= attackRange)
             {
-                StartCoroutine(AttackRoutine()); 
+                StartCoroutine(AttackRoutine());
             }
             else if (distance <= detectionRange)
             {
@@ -73,7 +73,7 @@ public class AnimalAI : MonoBehaviour
     {
         isAttacking = true;
         agent.isStopped = true;
-        animator.SetBool("Run", false); 
+        animator.SetBool("Run", false);
 
         animator.SetTrigger("Attack");
 
