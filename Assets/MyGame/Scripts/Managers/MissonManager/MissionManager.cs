@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class MissionManager : BaseManager<MissionManager>
 {
@@ -24,18 +25,14 @@ public class MissionManager : BaseManager<MissionManager>
     {
         if (!missionActive) return;
 
-        if (missionState == MissionState.InProgress && currentMission.timeLimit > 0)
+        if (currentMission.timeLimit > 0)
         {
             timer -= Time.deltaTime;
+            UIManager.Instance.UpdateMissionTimer(timer);
 
-            if (timer <= 0 && progress < currentMission.requiredAmount)
+            if (timer <= 0)
             {
-                MissionFailed();
-            }
-
-            if (timer <= 0 && missionState == MissionState.Completed)
-            {
-                AssignNewMission();
+                CheckMissionResult();
             }
         }
     }
@@ -50,6 +47,8 @@ public class MissionManager : BaseManager<MissionManager>
         missionState = MissionState.InProgress;
 
         Debug.Log($"NEW MISSION: {currentMission.missionName} - {currentMission.description}");
+
+        UIManager.Instance.ShowMission(currentMission.missionName, timer);
 
         if (currentMission.missionType == MissionData.MissionType.StealthSurvive)
         {
@@ -98,6 +97,40 @@ public class MissionManager : BaseManager<MissionManager>
         RemoveStealthSound();
     }
 
+    private void CheckMissionResult()
+    {
+        if (!missionActive) return;
+
+        if (missionState == MissionState.Completed)
+        {
+            Debug.Log("MISSION COMPLETE AFTER TIMER!");
+            missionActive = false;
+            UIManager.Instance.ShowMissionComplete();
+            StartCoroutine(PrepareNextMission());
+        }
+        else
+        {
+            Debug.Log("MISSION FAILED AFTER TIMER!");
+            MissionFailed();
+        }
+    }
+
+
+    private IEnumerator PrepareNextMission()
+    {
+        Debug.Log("WAITING 10 SECONDS BEFORE NEXT MISSION...");
+        int countdown = 10;
+
+        while (countdown > 0)
+        {
+            UIManager.Instance.UpdateMissionTimer(countdown);
+            yield return new WaitForSeconds(1f);
+            countdown--;
+        }
+
+        AssignNewMission();
+    }
+
     public void MissionFailed()
     {
         Debug.Log($"TIME OUT! MISSION FAILED! : {currentMission.missionName}...");
@@ -107,9 +140,11 @@ public class MissionManager : BaseManager<MissionManager>
 
         missionActive = false;
         missionState = MissionState.Failed;
-        GameManager.Instance.OnPlayerMissionFailed();
 
+        GameManager.Instance.OnPlayerMissionFailed();
         RemoveStealthSound();
+
+        UIManager.Instance.ShowGameOver();
     }
 
     void RemoveStealthSound()

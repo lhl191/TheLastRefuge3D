@@ -11,5 +11,5 @@ AssetOrigin:
   productId: 255608
   packageName: Master Stylized Projectile
   packageVersion: 1.0
-  assetPath: Assets/MasterStylizedProjectiles/Materials/FireExplosionBullet/FireExplosionDebris.mat
+  assetPath: Assets/ThirdParties/MasterStylizedProjectiles/Materials/FireExplosionBullet/FireExplosionDebris.mat
   uploadId: 746525

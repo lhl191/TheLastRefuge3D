@@ -169,5 +169,5 @@ AssetOrigin:
   productId: 255608
   packageName: Master Stylized Projectile
   packageVersion: 1.0
-  assetPath: Assets/MasterStylizedProjectiles/Texture/FireExplosionBullet/Smoke.png
+  assetPath: Assets/ThirdParties/MasterStylizedProjectiles/Texture/FireExplosionBullet/Smoke.png
   uploadId: 746525

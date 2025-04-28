@@ -1,21 +1,9 @@
 fileFormatVersion: 2
 guid: fa1767b38c81a63488e215c82f664645
-AssetOrigin:
-  serializedVersion: 1
-  productId: 255608
-  packageName: Master Stylized Projectile
-  packageVersion: 1.0
-  assetPath: Assets/MasterStylizedProjectiles/Models/Arrow.fbx
-  uploadId: 746525
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: lambert1
-    second: {fileID: 2100000, guid: c95396b6f2ddacf45b03adde9aafb04b, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -28,6 +16,8 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -117,3 +107,10 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 255608
+  packageName: Master Stylized Projectile
+  packageVersion: 1.0
+  assetPath: Assets/ThirdParties/MasterStylizedProjectiles/Models/Arrow.fbx
+  uploadId: 746525

@@ -10,5 +10,5 @@ AssetOrigin:
   productId: 255608
   packageName: Master Stylized Projectile
   packageVersion: 1.0
-  assetPath: Assets/MasterStylizedProjectiles/Prefabs/RedSwordBeam/RedSwordBeamMuzzle.prefab
+  assetPath: Assets/ThirdParties/MasterStylizedProjectiles/Prefabs/RedSwordBeam/RedSwordBeamMuzzle.prefab
   uploadId: 746525

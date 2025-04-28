@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/MyGame/Scene/GameScene.unity
+    path: Assets/MyGame/Scene/MenuGameTheLastRefuge.unity
     guid: 330ef8d9f607a654d8729370089b12fc
   - enabled: 1
     path: Assets/MyGame/Scene/TheLastRefuge.unity

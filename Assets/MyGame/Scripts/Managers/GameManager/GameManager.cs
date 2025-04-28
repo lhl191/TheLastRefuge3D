@@ -12,14 +12,19 @@ public class GameManager : BaseManager<GameManager>
     {
         if (gameEnded) return;
         gameEnded = true;
+
         Debug.Log("GAME OVER! Player is Dead!");
+      
+        UIManager.Instance.ShowGameOver();
     }
 
     public void OnPlayerMissionFailed()
     {
         if (gameEnded) return;
         gameEnded = true;
+
         Debug.Log("GAME OVER! Mission Failed!");
+        UIManager.Instance.ShowGameOver();
     }
 
     public void OnEnemyDied(EnemyHealth enemy)

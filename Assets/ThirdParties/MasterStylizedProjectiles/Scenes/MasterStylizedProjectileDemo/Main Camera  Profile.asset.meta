@@ -11,6 +11,6 @@ AssetOrigin:
   productId: 255608
   packageName: Master Stylized Projectile
   packageVersion: 1.0
-  assetPath: Assets/MasterStylizedProjectiles/Scenes/MasterStylizedProjectileDemo/Main
+  assetPath: Assets/ThirdParties/MasterStylizedProjectiles/Scenes/MasterStylizedProjectileDemo/Main
     Camera  Profile.asset
   uploadId: 746525

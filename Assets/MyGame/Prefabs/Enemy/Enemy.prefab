@@ -145,8 +145,9 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 0
   isDead: 0
-  hitByAxeEffectPrefab: {fileID: 6435508833776926270, guid: 0a3828a7c3a376841bd62ccc437c4114, type: 3}
+  hitByAxeEffectPrefab: {fileID: 2062980399852326438, guid: fd8d43320e1b7dc4697631f6770dcdc5, type: 3}
   hitByArrowEffectPrefab: {fileID: 3743929941838266515, guid: ebe6bfb1ecbc0444abc68b12b44e0152, type: 3}
+  hitSound: {fileID: 8300000, guid: 5b24af6220de802aabac259142ba6356, type: 3}
 --- !u!136 &8660926105571780386
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -6,10 +6,16 @@ public class PlayerHealth : MonoBehaviour
 {
     public float maxHealth = 100f;
     private float currentHealth;
-    [SerializeField]
-    private Slider healthBar;
+    [SerializeField] private Slider healthBar;
     private Animator animator;
     public bool isDead = false;
+
+    [Header("Hit Effect Prefab")]
+    public GameObject hitEffectPrefab;
+    public Vector3 hitEffectOffset = Vector3.up;
+
+    [Header("Hit Sound")]
+    public AudioClip hitSound;
 
     void Start()
     {
@@ -26,7 +32,22 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= damage;
         healthBar.value = currentHealth;
 
-        animator.SetBool("isHit", true); 
+        animator.SetBool("isHit", true);
+
+        if (hitEffectPrefab != null)
+        {
+            GameObject effectInstance = Instantiate(
+                hitEffectPrefab,
+                transform.position + hitEffectOffset,
+                Quaternion.identity
+            );
+            Destroy(effectInstance, 2f);
+        }
+
+        if (hitSound != null)
+        {
+            AudioSource.PlayClipAtPoint(hitSound, transform.position);
+        }
 
         if (currentHealth <= 0)
         {
@@ -34,18 +55,15 @@ public class PlayerHealth : MonoBehaviour
         }
         else
         {
-            StartCoroutine(ResetHitAnimation()); 
+            StartCoroutine(ResetHitAnimation());
         }
     }
 
     IEnumerator ResetHitAnimation()
     {
         yield return new WaitForSeconds(0.3f);
-        animator.SetBool("isHit", false); 
+        animator.SetBool("isHit", false);
     }
-
-
-
 
     void Die()
     {
@@ -60,13 +78,9 @@ public class PlayerHealth : MonoBehaviour
         this.enabled = false;
     }
 
-   
     IEnumerator StopAnimatorAfterDeath()
     {
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-        animator.speed = 0;  // Dừng Animator để không quay về Idle
+        animator.speed = 0;
     }
-
-
 }
-

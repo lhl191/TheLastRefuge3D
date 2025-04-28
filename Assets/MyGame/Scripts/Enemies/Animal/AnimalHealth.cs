@@ -13,6 +13,9 @@ public class AnimalHealth : MonoBehaviour
     public GameObject hitByAxeEffectPrefab;
     public GameObject hitByArrowEffectPrefab;
 
+    [Header("Hit Sound")]
+    public AudioClip hitSound;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -26,7 +29,6 @@ public class AnimalHealth : MonoBehaviour
 
         currentHealth -= damage;
 
-        // 🛠 Spawn effect theo weaponType
         if (weaponType == "axe" && hitByAxeEffectPrefab != null)
         {
             Instantiate(hitByAxeEffectPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
@@ -36,7 +38,11 @@ public class AnimalHealth : MonoBehaviour
             Instantiate(hitByArrowEffectPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
         }
 
-        // 🟰 AnimalHealth riêng biệt: bị đánh xong đuổi player
+        if (hitSound != null)
+        {
+            AudioSource.PlayClipAtPoint(hitSound, transform.position);
+        }
+
         if (animalAI != null)
         {
             animalAI.StartChasingPlayer();
@@ -48,10 +54,7 @@ public class AnimalHealth : MonoBehaviour
         }
         else
         {
-            if (animator != null)
-            {
-                animator.SetTrigger("Hit");
-            }
+            animator?.SetTrigger("Hit");
         }
     }
 
@@ -60,15 +63,9 @@ public class AnimalHealth : MonoBehaviour
         if (isDead) return;
 
         isDead = true;
-        if (animator != null)
-        {
-            animator.SetBool("Die", true);
-        }
+        animator?.SetBool("Die", true);
 
-        if (animalAI != null)
-        {
-            animalAI.OnDeath(); // 👉 ngừng đuổi khi chết
-        }
+        animalAI?.OnDeath();
 
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
@@ -86,5 +83,3 @@ public class AnimalHealth : MonoBehaviour
         Destroy(gameObject, 3f);
     }
 }
-
-

@@ -185,6 +185,7 @@ GameObject:
   - component: {fileID: 1355492933283227648}
   - component: {fileID: 8592595036561142978}
   - component: {fileID: 8852786906369013979}
+  - component: {fileID: 6376762858722813693}
   m_Layer: 0
   m_Name: Rock_Big_01
   m_TagString: Untagged
@@ -271,6 +272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectType: 1
+  interactUI: {fileID: 0}
 --- !u!64 &8852786906369013979
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -293,6 +295,20 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -7295575493426455349, guid: 0c12e0a1921790b4292abde8f668ddd7, type: 3}
+--- !u!114 &6376762858722813693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6352021543831262072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab2577167ddbb544da4e80d04d203acc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoints: 3
+  stonePerHit: 2
 --- !u!1 &7224992242794208512
 GameObject:
   m_ObjectHideFlags: 0

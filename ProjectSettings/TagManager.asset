@@ -8,6 +8,7 @@ TagManager:
   - Interactable
   - Boss
   - Animal
+  - Pet
   layers:
   - Default
   - TransparentFX

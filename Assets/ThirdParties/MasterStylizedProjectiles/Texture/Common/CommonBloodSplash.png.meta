@@ -169,5 +169,5 @@ AssetOrigin:
   productId: 255608
   packageName: Master Stylized Projectile
   packageVersion: 1.0
-  assetPath: Assets/MasterStylizedProjectiles/Texture/Common/CommonBloodSplash.png
+  assetPath: Assets/ThirdParties/MasterStylizedProjectiles/Texture/Common/CommonBloodSplash.png
   uploadId: 746525

@@ -14,5 +14,5 @@ AssetOrigin:
   productId: 255608
   packageName: Master Stylized Projectile
   packageVersion: 1.0
-  assetPath: Assets/MasterStylizedProjectiles/Scripts/BillBoardParticle.cs
+  assetPath: Assets/ThirdParties/MasterStylizedProjectiles/Scripts/BillBoardParticle.cs
   uploadId: 746525

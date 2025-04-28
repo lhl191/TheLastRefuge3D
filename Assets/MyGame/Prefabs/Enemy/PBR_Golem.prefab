@@ -467,11 +467,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82446568af6702e469dd5bc875c5ae73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 200
   isDead: 0
   objectType: 3
   hitByAxeEffectPrefab: {fileID: 8085065028046660701, guid: 35f3a80ff3d6c4048b47702734716cb3, type: 3}
   hitByArrowEffectPrefab: {fileID: 3743929941838266515, guid: ebe6bfb1ecbc0444abc68b12b44e0152, type: 3}
+  hitSound: {fileID: 8300000, guid: 68130b80f9f024c7e89459d6f48ad5b8, type: 3}
 --- !u!114 &2028485671884085912
 MonoBehaviour:
   m_ObjectHideFlags: 0

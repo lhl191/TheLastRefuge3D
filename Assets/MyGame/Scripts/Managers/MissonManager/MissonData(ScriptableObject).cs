@@ -8,8 +8,7 @@ public class MissionData : ScriptableObject
     public MissionType missionType;
     public int requiredAmount;
     public float timeLimit;
-    public bool hasPenalty;
-    public bool hasReward;
+  
 
     public enum MissionType
     {
@@ -19,6 +18,7 @@ public class MissionData : ScriptableObject
         KillBeast,
         KillPlayer,
         StealthSurvive,
+        CollectableBranch,
         FindItem
     }
 }

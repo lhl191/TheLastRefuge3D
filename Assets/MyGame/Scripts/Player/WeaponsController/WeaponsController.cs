@@ -18,6 +18,8 @@ public class WeaponController : MonoBehaviour
     public AudioClip axeSwingSound;
     public AudioClip weaponChangeSound;
 
+    public GameObject axeSlashEffectPrefab;
+
     private GameObject currentWeapon;
     public string currentWeaponType = "noWeapon";
     private bool isAttacking = false;
@@ -62,27 +64,32 @@ public class WeaponController : MonoBehaviour
             currentWeapon = Instantiate(axePrefab, rightHandTransform);
             currentWeapon.transform.localPosition = new Vector3(-0.1f, 0f, 0.04f);
             currentWeapon.transform.localRotation = Quaternion.Euler(0f, 250f, -58.22f);
+
+            WeaponManager.CurrentWeapon = WeaponManager.WeaponType.Axe; 
         }
         else if (weaponType == "archery")
         {
             currentWeapon = Instantiate(bowPrefab, leftHandTransform);
             currentWeapon.transform.localPosition = new Vector3(0f, 0.045f, 0f);
             currentWeapon.transform.localRotation = Quaternion.Euler(50f, 170f, -105f);
+
+            WeaponManager.CurrentWeapon = WeaponManager.WeaponType.Bow; 
         }
         else
         {
             currentWeapon = null;
+            WeaponManager.CurrentWeapon = WeaponManager.WeaponType.NoWeapon; 
         }
 
         currentWeaponType = weaponType;
         isAttacking = false;
 
-       
         if (weaponChangeSound != null)
         {
             AudioSource.PlayClipAtPoint(weaponChangeSound, transform.position);
         }
     }
+
 
 
     void Attack()
@@ -123,6 +130,15 @@ public class WeaponController : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
+        if (axeSlashEffectPrefab != null)
+        {
+            Vector3 slashSpawnPos = playerController.transform.position + playerController.transform.forward * 1.5f + Vector3.up * 0.7f; 
+            Quaternion slashSpawnRot = Quaternion.LookRotation(playerController.transform.forward);
+
+            GameObject slashEffect = Instantiate(axeSlashEffectPrefab, slashSpawnPos, slashSpawnRot);
+            Destroy(slashEffect, 1.5f);
+        }
+
         Collider[] hits = Physics.OverlapSphere(playerController.transform.position + playerController.transform.forward * 1.5f + Vector3.up * 1f, 1f);
 
         foreach (var hit in hits)
@@ -147,22 +163,31 @@ public class WeaponController : MonoBehaviour
             }
             else
             {
-              
                 TreeResource tree = hit.GetComponent<TreeResource>();
                 if (tree != null)
                 {
                     tree.ChopTree();
+                    continue;
+                }
+
+                StoneResource stone = hit.GetComponent<StoneResource>();
+                if (stone != null)
+                {
+                    stone.MineStone();
+                    continue;
                 }
             }
+
         }
     }
+
 
     IEnumerator ShootArrowWithDelay(float delay)
     {
         GameObject arrowEffect = null;
         if (arrowEffectPrefab != null && arrowSpawnPoint != null)
         {
-            Vector3 effectOffset = arrowSpawnPoint.forward * 0.6f + arrowSpawnPoint.right * 0.08f + Vector3.up * 0.6f;
+            Vector3 effectOffset = arrowSpawnPoint.forward * 0.3f + Vector3.up * 0.6f;
             Vector3 spawnPosition = arrowSpawnPoint.position + effectOffset;
 
             arrowEffect = Instantiate(arrowEffectPrefab, spawnPosition, arrowSpawnPoint.rotation);

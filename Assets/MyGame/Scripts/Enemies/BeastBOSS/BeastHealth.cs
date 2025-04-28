@@ -15,6 +15,9 @@ public class BossHealth : MonoBehaviour
     public GameObject hitByAxeEffectPrefab;
     public GameObject hitByArrowEffectPrefab;
 
+    [Header("Hit Sound")]
+    public AudioClip hitSound;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -29,7 +32,6 @@ public class BossHealth : MonoBehaviour
 
         currentHealth -= damage;
 
-        // 🛠 Spawn effect theo weaponType
         if (weaponType == "axe" && hitByAxeEffectPrefab != null)
         {
             Instantiate(hitByAxeEffectPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
@@ -37,6 +39,11 @@ public class BossHealth : MonoBehaviour
         else if (weaponType == "arrow" && hitByArrowEffectPrefab != null)
         {
             Instantiate(hitByArrowEffectPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+        }
+
+        if (hitSound != null)
+        {
+            AudioSource.PlayClipAtPoint(hitSound, transform.position);
         }
 
         if (currentHealth <= 0)
@@ -49,7 +56,6 @@ public class BossHealth : MonoBehaviour
         }
     }
 
-
     private void Die()
     {
         if (isDead) return;
@@ -59,21 +65,19 @@ public class BossHealth : MonoBehaviour
         animator.ResetTrigger("GetHit");
         animator.SetTrigger("Die");
 
-        // Kiểm tra nếu agent vẫn còn hoạt động (đã được kích hoạt và chưa bị tắt)
         if (agent != null && agent.isActiveAndEnabled)
         {
-            agent.isStopped = true;  // Dừng di chuyển khi chết
-            agent.velocity = Vector3.zero;  // Đảm bảo không còn chuyển động
-            agent.enabled = false;  // Tắt NavMeshAgent khi chết
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+            agent.enabled = false;
         }
 
         if (bossAI != null)
         {
-            bossAI.OnDeath(); // Gọi OnDeath để đồng bộ isDead và animation logic
-            bossAI.enabled = false;  // Tắt AI sau khi chết
+            bossAI.OnDeath();
+            bossAI.enabled = false;
         }
 
-        // Đảm bảo Rigidbody không di chuyển khi chết
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -87,6 +91,4 @@ public class BossHealth : MonoBehaviour
             MissionManager.Instance.UpdateProgress();
         }
     }
-
-
 }

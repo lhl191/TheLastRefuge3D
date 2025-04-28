@@ -114,8 +114,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6295d56fcb6964c8cd9013cf1aab0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPoints: 3
-  woodPerHit: 3
+  hitPoints: 0
+  woodPerHit: 0
 --- !u!1 &1220029384735841839
 GameObject:
   m_ObjectHideFlags: 0

@@ -223,7 +223,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.10196078, g: 0.5452091, b: 0.9529412, a: 1}
+      maxColor: {r: 0.9529412, g: 0.11029321, b: 0.10196078, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5114,7 +5114,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.7783019, g: 0.8152515, b: 1, a: 0.4392157}
+      maxColor: {r: 1, g: 0.77863693, b: 0.7764706, a: 0.4392157}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -9818,7 +9818,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 989269485055608489}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.13711222, y: 0.5222789, z: 0.08552348, w: 0.83732355}
+  m_LocalRotation: {x: -0.1421308, y: 0.2469187, z: 0.03663888, w: 0.95785576}
   m_LocalPosition: {x: 0.040807724, y: 0.00076913834, z: 0.016557693}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
@@ -10015,7 +10015,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.109803915, g: 0.6382812, b: 1, a: 1}
+      maxColor: {r: 1, g: 0.15426956, b: 0.109803915, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -14937,7 +14937,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.5254902, g: 0.7097686, b: 1, a: 1}
+      maxColor: {r: 1, g: 0.54426146, b: 0.5254902, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -19828,7 +19828,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.27058828, g: 0.3914408, b: 1, a: 0.4392157}
+      maxColor: {r: 1, g: 0.27780715, b: 0.27058828, a: 0.4392157}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -24728,7 +24728,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.117647074, g: 0.65292764, b: 0.85882354, a: 1}
+      maxColor: {r: 0.85882354, g: 0.13246736, b: 0.117647074, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -29628,7 +29628,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.44313732, g: 0.898841, b: 0.99215686, a: 1}
+      maxColor: {r: 0.99215686, g: 0.4486248, b: 0.44313732, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -34386,7 +34386,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2696318877238287629}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.13711222, y: 0.5222789, z: 0.08552348, w: 0.83732355}
+  m_LocalRotation: {x: -0.1421308, y: 0.2469187, z: 0.03663888, w: 0.95785576}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
@@ -34583,7 +34583,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.15686274, g: 0.81952983, b: 1, a: 1}
+      maxColor: {r: 1, g: 0.18188567, b: 0.15686274, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -39496,7 +39496,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.10196078, g: 0.5452091, b: 0.9529412, a: 1}
+      maxColor: {r: 0.9529412, g: 0.11880014, b: 0.10196078, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -44191,7 +44191,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3595937626352599918}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.13711222, y: 0.5222789, z: 0.08552348, w: 0.83732355}
+  m_LocalRotation: {x: -0.1421308, y: 0.2469187, z: 0.03663888, w: 0.95785576}
   m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
@@ -44388,7 +44388,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.11792451, g: 0.57798755, b: 1, a: 1}
+      maxColor: {r: 1, g: 0.12628667, b: 0.11764705, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -54198,7 +54198,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.27058828, g: 0.48560655, b: 1, a: 1}
+      maxColor: {r: 1, g: 0.2778788, b: 0.27058828, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -59098,7 +59098,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.1372549, g: 0.8558349, b: 1, a: 0.9372549}
+      maxColor: {r: 1, g: 0.14579335, b: 0.1372549, a: 0.9372549}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -63989,7 +63989,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.39999998, g: 0.6507629, b: 1, a: 0.49019608}
+      maxColor: {r: 1, g: 0.4122525, b: 0.39999998, a: 0.49019608}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -73780,7 +73780,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.2117647, g: 0.69919294, b: 1, a: 0.09803922}
+      maxColor: {r: 1, g: 0.25113735, b: 0.2117647, a: 0.09803922}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}

@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc0419d70fb71d44b9d91152b381f560, type: 3}
   m_Name: KillPlayer
   m_EditorClassIdentifier: 
-  missionName: Kill Player
-  description: Kill 1 Player in 3 Minute. Move move!!!
+  missionName: Kill 3 Player in 3 Minute. Move move!!!
+  description: Kill 3 Player in 3 Minute. Move move!!!
   missionType: 4
-  requiredAmount: 1
-  timeLimit: 60
-  hasPenalty: 1
-  hasReward: 1
+  requiredAmount: 3
+  timeLimit: 180
+  hasPenalty: 0
+  hasReward: 0

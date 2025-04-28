@@ -11,6 +11,9 @@ public class EnemyHealth : MonoBehaviour
     public GameObject hitByAxeEffectPrefab;
     public GameObject hitByArrowEffectPrefab;
 
+    [Header("Hit Sound")]
+    public AudioClip hitSound;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -23,7 +26,6 @@ public class EnemyHealth : MonoBehaviour
 
         currentHealth -= damage;
 
-       
         if (weaponType == "axe" && hitByAxeEffectPrefab != null)
         {
             Instantiate(hitByAxeEffectPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
@@ -31,6 +33,11 @@ public class EnemyHealth : MonoBehaviour
         else if (weaponType == "arrow" && hitByArrowEffectPrefab != null)
         {
             Instantiate(hitByArrowEffectPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
+        }
+
+        if (hitSound != null)
+        {
+            AudioSource.PlayClipAtPoint(hitSound, transform.position);
         }
 
         if (currentHealth <= 0)
@@ -53,28 +60,28 @@ public class EnemyHealth : MonoBehaviour
         animator.SetBool("Die", true);
 
         NavMeshAgent agent = GetComponent<NavMeshAgent>();
-        agent.isStopped = true;
-        agent.velocity = Vector3.zero;  // Ngừng mọi di chuyển
-        agent.enabled = false;  // Tắt luôn NavMeshAgent
+        if (agent != null)
+        {
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+            agent.enabled = false;
+        }
 
-        GetComponent<EnemyAI>().enabled = false; // Vô hiệu hóa AI
+        GetComponent<EnemyAI>().enabled = false;
 
-        // 🔒 Khóa xoay & di chuyển vật lý để tránh lỗi
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.constraints = RigidbodyConstraints.FreezeAll;
         }
+
         GameManager.Instance.OnEnemyDied(this);
 
-        // ✅ Cập nhật nhiệm vụ khi giết Enemy
         MissionData mission = MissionManager.Instance.GetCurrentMission();
         if (mission != null && mission.missionType == MissionData.MissionType.KillPlayer)
         {
-            Debug.Log("MISSION SUCCES: KILL PLAYER !!");
+            Debug.Log("MISSION SUCCESS: KILL PLAYER !!");
             MissionManager.Instance.UpdateProgress();
         }
     }
-
-
 }

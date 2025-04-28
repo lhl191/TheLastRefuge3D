@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 1796305539827835100}
   - component: {fileID: 2333257399122318631}
   - component: {fileID: 7685979936871682033}
+  - component: {fileID: 5978519794582662349}
   m_Layer: 0
   m_Name: Rock_Big_02
   m_TagString: Untagged
@@ -185,6 +186,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectType: 1
+  interactUI: {fileID: 0}
+--- !u!114 &5978519794582662349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4625700007039568898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab2577167ddbb544da4e80d04d203acc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoints: 0
+  stonePerHit: 0
 --- !u!1 &5105180439974532495
 GameObject:
   m_ObjectHideFlags: 0

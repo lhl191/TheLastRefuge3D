@@ -24,4 +24,12 @@ public class ResourceManager : BaseManager<ResourceManager>
     public int GetWoodAmount() => woodAmount;
     public int GetStoneAmount() => stoneAmount;
     public int GetFruitAmount() => fruitAmount;
+    public void ResetResourcesToDefault()
+    {
+        woodAmount = 0;
+        stoneAmount = 0;
+        fruitAmount = 0;
+        
+    }
+
 }

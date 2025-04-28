@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc0419d70fb71d44b9d91152b381f560, type: 3}
   m_Name: LootFruit
   m_EditorClassIdentifier: 
-  missionName: Loot Fruit
-  description: Loot 1 Fruit !!
+  missionName: Loot 10 Fruit !!
+  description: Loot 10 Fruit !!
   missionType: 1
-  requiredAmount: 1
-  timeLimit: 60
-  hasPenalty: 1
-  hasReward: 1
+  requiredAmount: 10
+  timeLimit: 180
+  hasPenalty: 0
+  hasReward: 0

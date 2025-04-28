@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc0419d70fb71d44b9d91152b381f560, type: 3}
   m_Name: FarmWood
   m_EditorClassIdentifier: 
-  missionName: Farm-Collect Wood
+  missionName: Farm or Collect 10 Wood !
   description: Farm or Collect 10 Wood !
   missionType: 1
   requiredAmount: 10
-  timeLimit: 60
-  hasPenalty: 1
-  hasReward: 1
+  timeLimit: 180
+  hasPenalty: 0
+  hasReward: 0

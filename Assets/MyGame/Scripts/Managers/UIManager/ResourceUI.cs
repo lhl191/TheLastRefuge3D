@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 
-public class ResourceUI : MonoBehaviour
+public class ResourceUI : BaseManager<ResourceUI>
 {
     public TextMeshProUGUI woodText;
     public TextMeshProUGUI stoneText;
@@ -9,21 +9,20 @@ public class ResourceUI : MonoBehaviour
 
     void Update()
     {
+        // Cập nhật thông tin tài nguyên
         if (woodText != null)
         {
-            woodText.text = "Wood: " + ResourceManager.Instance.GetWoodAmount();
+            woodText.text = " " + ResourceManager.Instance.GetWoodAmount();
         }
 
         if (fruitText != null)
         {
-            fruitText.text = "Fruit: " + ResourceManager.Instance.GetFruitAmount();
+            fruitText.text = " " + ResourceManager.Instance.GetFruitAmount();
         }
 
         if (stoneText != null)
         {
-            stoneText.text = "Stone: " + ResourceManager.Instance.GetStoneAmount();
+            stoneText.text = " " + ResourceManager.Instance.GetStoneAmount();
         }
     }
 }
-
-

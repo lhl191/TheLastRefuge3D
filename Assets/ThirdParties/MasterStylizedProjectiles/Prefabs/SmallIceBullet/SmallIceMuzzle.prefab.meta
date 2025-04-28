@@ -10,5 +10,5 @@ AssetOrigin:
   productId: 255608
   packageName: Master Stylized Projectile
   packageVersion: 1.0
-  assetPath: Assets/MasterStylizedProjectiles/Prefabs/SmallIceBullet/SmallIceMuzzle.prefab
+  assetPath: Assets/ThirdParties/MasterStylizedProjectiles/Prefabs/SmallIceBullet/SmallIceMuzzle.prefab
   uploadId: 746525

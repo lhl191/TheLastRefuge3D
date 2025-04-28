@@ -47,7 +47,7 @@ public class ThirdPersonController : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
-        audioSource.loop = true; // Loop để tiếng bước chân lặp lại
+        audioSource.loop = true; 
 
 
     }
@@ -91,7 +91,7 @@ public class ThirdPersonController : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, Camera.main.transform.eulerAngles.y, 0f);
         }
 
-        // **Thay đổi vũ khí bằng phím số**
+       
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             SwitchWeapon("axe");
@@ -132,14 +132,14 @@ public class ThirdPersonController : MonoBehaviour
 
         // **Thay đổi chiều cao của CharacterController khi ngồi**
         cc.height = isCrouching ? 1f : 2f;
-        cc.center = new Vector3(0, isCrouching ? 0.5f : 1f, 0); // Dịch chuyển trọng tâm tránh lỗi va chạm
+        cc.center = new Vector3(0, isCrouching ? 0.5f : 1f, 0);
 
         Vector3 moveDirection = new Vector3(inputHorizontal, 0, inputVertical).normalized;
         moveDirection *= (velocity + velocityAdittion) * Time.deltaTime;
         moveDirection = Camera.main.transform.TransformDirection(moveDirection);
         moveDirection.y = isJumping ? Mathf.SmoothStep(jumpForce, jumpForce * 0.30f, jumpElapsedTime / jumpTime) * Time.deltaTime : -gravity * Time.deltaTime;
 
-        // 🔹 Nếu nhân vật đang di chuyển, thì thay đổi góc quay
+       
         if (moveDirection.x != 0 || moveDirection.z != 0)
         {
             float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
@@ -175,7 +175,7 @@ public class ThirdPersonController : MonoBehaviour
 
             
             audioSource.pitch = isSprinting ? 1.1f : 0.9f;
-            // -> 1.1x nhanh khi chạy, 0.9x chậm khi đi bộ
+          
 
             if (audioSource.clip != clipToPlay)
             {
@@ -206,7 +206,7 @@ public class ThirdPersonController : MonoBehaviour
 
     public void SwitchWeapon(string weaponType)
     {
-        // Chỉ gọi hàm đổi vũ khí trong WeaponController, không tự tạo vũ khí trong script này
+       
         if (weaponController != null)
         {
             weaponController.SetWeapon(weaponType);
@@ -220,11 +220,10 @@ public class ThirdPersonController : MonoBehaviour
     {
         isDead = true;
         animator.SetBool("Die", true);
-        cc.enabled = false;  // Tắt CharacterController để ngăn di chuyển
 
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
 
-        this.enabled = false; // Vô hiệu hóa script sau khi animation kết thúc
+        this.enabled = false; 
     }
     void OnTriggerEnter(Collider other)
     {
@@ -244,19 +243,18 @@ public class ThirdPersonController : MonoBehaviour
     IEnumerator PickupCoroutine()
     {
         isPickingUp = true;
-        animator.SetTrigger("pickUp"); // Gửi tín hiệu chạy animation
+        animator.SetTrigger("pickUp");
 
-        yield return new WaitForSeconds(0.5f); // Thời gian animation nhặt đồ
-
+        yield return new WaitForSeconds(0.5f); 
         if (nearObject != null)
         {
             if (nearObject.interactUI != null)
             {
-                nearObject.interactUI.SetActive(false); // Ẩn UI trước khi nhặt
+                nearObject.interactUI.SetActive(false); 
             }
 
             nearObject.Interact();
-            nearObject = null; // Xóa reference để tránh lỗi
+            nearObject = null; 
         }
 
         isPickingUp = false;

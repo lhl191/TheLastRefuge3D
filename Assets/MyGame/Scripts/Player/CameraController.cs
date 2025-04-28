@@ -1,10 +1,4 @@
-﻿
-using UnityEngine;
-
-/*
-    This file has a commented version with details about how each line works. 
-    The commented version contains code that is easier and simpler to read. This file is minified.
-*/
+﻿using UnityEngine;
 
 /// <summary>
 /// Camera movement script for third person games.
@@ -13,7 +7,6 @@ using UnityEngine;
 /// </summary>
 public class CameraController : MonoBehaviour
 {
-
     [Tooltip("Enable to move the camera by holding the right mouse button. Does not work with joysticks.")]
     public bool clickToMoveCamera = false;
     [Tooltip("Enable zoom in/out when scrolling the mouse wheel. Does not work with joysticks.")]
@@ -25,51 +18,60 @@ public class CameraController : MonoBehaviour
     [Tooltip("Camera Y rotation limits. The X axis is the maximum it can go up and the Y axis is the maximum it can go down.")]
     public Vector2 cameraLimit = new Vector2(0, 80);
 
-    float mouseX;
-    float mouseY;
-    float offsetDistanceY;
+    private float mouseX;
+    private float mouseY;
+    private float offsetDistanceY;
 
-    Transform player;
+    private Transform player;
 
     void Start()
     {
-
         player = GameObject.FindWithTag("Player").transform;
-        offsetDistanceY = transform.position.y;
+        offsetDistanceY = transform.position.y - player.position.y; // Sửa lại offsetDistanceY để giữ khoảng cách cố định
 
         // Lock and hide cursor with option isn't checked
-        if ( ! clickToMoveCamera )
+        if (!clickToMoveCamera)
         {
             UnityEngine.Cursor.lockState = CursorLockMode.Locked;
             UnityEngine.Cursor.visible = false;
         }
-
     }
-
 
     void Update()
     {
-
         // Follow player - camera offset
-        transform.position = player.position + new Vector3(0, offsetDistanceY, 0);
+        Vector3 targetPosition = new Vector3(player.position.x, player.position.y + offsetDistanceY, player.position.z);
+
+        // Raycast để kiểm tra độ cao của terrain và điều chỉnh vị trí camera
+        RaycastHit hit;
+        Ray ray = new Ray(targetPosition, Vector3.down);
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            // Cập nhật vị trí camera dựa trên kết quả raycast
+            targetPosition = new Vector3(player.position.x, hit.point.y + offsetDistanceY, player.position.z);
+        }
+
+        // Cập nhật vị trí camera
+        transform.position = targetPosition;
 
         // Set camera zoom when mouse wheel is scrolled
-        if( canZoom && Input.GetAxis("Mouse ScrollWheel") != 0 )
+        if (canZoom && Input.GetAxis("Mouse ScrollWheel") != 0)
             Camera.main.fieldOfView -= Input.GetAxis("Mouse ScrollWheel") * sensitivity * 2;
-        // You can use Mathf.Clamp to set limits on the field of view
 
         // Checker for right click to move camera
-        if ( clickToMoveCamera )
+        if (clickToMoveCamera)
             if (Input.GetAxisRaw("Fire2") == 0)
                 return;
-            
+
         // Calculate new position
         mouseX += Input.GetAxis("Mouse X") * sensitivity;
-        mouseY += Input.GetAxis("Mouse Y") * sensitivity;
-        // Apply camera limts
+        mouseY -= Input.GetAxis("Mouse Y") * sensitivity; // Lật dấu Y để xoay đúng chiều
+
+        // Apply camera limits to avoid seeing under the ground
         mouseY = Mathf.Clamp(mouseY, cameraLimit.x, cameraLimit.y);
 
-        transform.rotation = Quaternion.Euler(-mouseY, mouseX, 0);
-
+        // Rotate camera
+        transform.rotation = Quaternion.Euler(mouseY, mouseX, 0);
     }
 }

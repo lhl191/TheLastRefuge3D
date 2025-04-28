@@ -10,5 +10,5 @@ AssetOrigin:
   productId: 255608
   packageName: Master Stylized Projectile
   packageVersion: 1.0
-  assetPath: Assets/MasterStylizedProjectiles/Shaders/UberParticles.shadergraph
+  assetPath: Assets/ThirdParties/MasterStylizedProjectiles/Shaders/UberParticles.shadergraph
   uploadId: 746525

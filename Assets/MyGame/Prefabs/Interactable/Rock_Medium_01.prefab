@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 3343059489971674399}
   - component: {fileID: 4555588183097212355}
   - component: {fileID: 4617545651542649101}
+  - component: {fileID: 8428455109773723019}
   m_Layer: 0
   m_Name: Rock_Medium_01
   m_TagString: Untagged
@@ -185,6 +186,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectType: 1
+  interactUI: {fileID: 0}
+--- !u!114 &8428455109773723019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128336611642107019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab2577167ddbb544da4e80d04d203acc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitPoints: 0
+  stonePerHit: 0
 --- !u!1 &7232962822865915105
 GameObject:
   m_ObjectHideFlags: 0

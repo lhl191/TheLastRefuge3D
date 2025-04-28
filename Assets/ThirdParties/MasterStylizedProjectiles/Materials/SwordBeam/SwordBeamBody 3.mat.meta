@@ -11,5 +11,6 @@ AssetOrigin:
   productId: 255608
   packageName: Master Stylized Projectile
   packageVersion: 1.0
-  assetPath: Assets/MasterStylizedProjectiles/Materials/SwordBeam/SwordBeamBody 3.mat
+  assetPath: Assets/ThirdParties/MasterStylizedProjectiles/Materials/SwordBeam/SwordBeamBody
+    3.mat
   uploadId: 746525

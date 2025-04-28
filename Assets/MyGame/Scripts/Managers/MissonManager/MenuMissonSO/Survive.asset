@@ -12,10 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc0419d70fb71d44b9d91152b381f560, type: 3}
   m_Name: Survive
   m_EditorClassIdentifier: 
-  missionName: 'Survive !!!!! '
+  missionName: 'Survive !!!!! Do Not Anything! Yeah!!!! '
   description: 'Do Not Anything! Yeah!!!! '
   missionType: 0
-  requiredAmount: 0
-  timeLimit: 60
-  hasPenalty: 0
-  hasReward: 0
+  requiredAmount: 1
+  timeLimit: 180

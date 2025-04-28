@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc0419d70fb71d44b9d91152b381f560, type: 3}
   m_Name: StealthSurvival
   m_EditorClassIdentifier: 
-  missionName: 'Stealth Survival...BUT with Ring??? '
+  missionName: 'Stealth Survival...BUT with Ring???, Equipped with a bell that makes
+    a sound, live for 3 minutes. '
   description: Equipped with a bell that makes a sound, live for 3 minutes.
   missionType: 5
-  requiredAmount: 0
-  timeLimit: 60
-  hasPenalty: 0
-  hasReward: 0
+  requiredAmount: 1
+  timeLimit: 180

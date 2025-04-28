@@ -10,5 +10,5 @@ AssetOrigin:
   productId: 255608
   packageName: Master Stylized Projectile
   packageVersion: 1.0
-  assetPath: Assets/MasterStylizedProjectiles/Prefabs/YellowSwordBeam/YellowSwordBeamMuzzle.prefab
+  assetPath: Assets/ThirdParties/MasterStylizedProjectiles/Prefabs/YellowSwordBeam/YellowSwordBeamMuzzle.prefab
   uploadId: 746525

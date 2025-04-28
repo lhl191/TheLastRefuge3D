@@ -65,7 +65,7 @@ public class EnemyAI : MonoBehaviour
 
     void AttackPlayer()
     {
-        if (isAttacking || GetComponent<EnemyHealth>().isDead) return; // Không tấn công nếu đã chết
+        if (isAttacking || GetComponent<EnemyHealth>().isDead) return; 
 
         PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
         if (playerHealth != null && playerHealth.isDead)
@@ -84,7 +84,7 @@ public class EnemyAI : MonoBehaviour
         {
             animator.SetTrigger("Attack");
         }
-        Invoke("ResetAttack", 1.5f);
+        Invoke("ResetAttack", 1f);
     }
 
 
@@ -160,6 +160,5 @@ public class EnemyAI : MonoBehaviour
 
         this.enabled = false; // ✅ Dừng AI hoàn toàn
     }
-
 
 }
