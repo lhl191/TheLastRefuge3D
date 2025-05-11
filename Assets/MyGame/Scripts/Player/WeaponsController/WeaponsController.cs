@@ -54,36 +54,42 @@ public class WeaponController : MonoBehaviour
 
     public void SetWeapon(string weaponType)
     {
+        // Xoá vũ khí hiện tại nếu có
         if (currentWeapon != null)
         {
             Destroy(currentWeapon);
-        }
-
-        if (weaponType == "axe")
-        {
-            currentWeapon = Instantiate(axePrefab, rightHandTransform);
-            currentWeapon.transform.localPosition = new Vector3(-0.1f, 0f, 0.04f);
-            currentWeapon.transform.localRotation = Quaternion.Euler(0f, 250f, -58.22f);
-
-            WeaponManager.CurrentWeapon = WeaponManager.WeaponType.Axe; 
-        }
-        else if (weaponType == "archery")
-        {
-            currentWeapon = Instantiate(bowPrefab, leftHandTransform);
-            currentWeapon.transform.localPosition = new Vector3(0f, 0.045f, 0f);
-            currentWeapon.transform.localRotation = Quaternion.Euler(50f, 170f, -105f);
-
-            WeaponManager.CurrentWeapon = WeaponManager.WeaponType.Bow; 
-        }
-        else
-        {
             currentWeapon = null;
-            WeaponManager.CurrentWeapon = WeaponManager.WeaponType.NoWeapon; 
+        }
+
+        // Cập nhật vũ khí mới
+        switch (weaponType)
+        {
+            case "axe":
+                currentWeapon = Instantiate(axePrefab, rightHandTransform);
+                currentWeapon.transform.localPosition = new Vector3(-0.1f, 0f, 0.04f);
+                currentWeapon.transform.localRotation = Quaternion.Euler(0f, 250f, -58.22f);
+                WeaponManager.CurrentWeapon = WeaponManager.WeaponType.Axe;
+                break;
+
+            case "archery":
+                currentWeapon = Instantiate(bowPrefab, leftHandTransform);
+                currentWeapon.transform.localPosition = new Vector3(0f, 0.045f, 0f);
+                currentWeapon.transform.localRotation = Quaternion.Euler(50f, 170f, -105f);
+                WeaponManager.CurrentWeapon = WeaponManager.WeaponType.Bow;
+                break;
+
+            case "noWeapon":
+            default:
+            
+                currentWeapon = null;
+                WeaponManager.CurrentWeapon = WeaponManager.WeaponType.NoWeapon;
+                break;
         }
 
         currentWeaponType = weaponType;
         isAttacking = false;
 
+      
         if (weaponChangeSound != null)
         {
             AudioSource.PlayClipAtPoint(weaponChangeSound, transform.position);

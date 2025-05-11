@@ -1,6 +1,4 @@
-﻿// File: Assets/MyGame/Scripts/Interactables/InteractableObjects.cs
-
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InteractableObjects : MonoBehaviour
 {

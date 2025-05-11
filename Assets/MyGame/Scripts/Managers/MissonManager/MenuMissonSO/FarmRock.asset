@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: FarmRock
   m_EditorClassIdentifier: 
   missionName: Farm 10 Rock !
-  description: Collect 10 Rock !
+  description: Farm 10 Rock !
   missionType: 1
   requiredAmount: 10
   timeLimit: 180
-  hasPenalty: 0
-  hasReward: 0

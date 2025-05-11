@@ -13,18 +13,17 @@ public class MissionManager : BaseManager<MissionManager>
 
     public GameObject stealthSoundPrefab;
     private GameObject activeSoundObj;
+    private bool missionObjectiveMet = false;
 
     public enum MissionState { NotStarted, InProgress, Completed, Failed }
     public MissionState missionState = MissionState.NotStarted;
 
     private Coroutine missionCoroutine;
     private bool sceneHooked = false;
-    private bool hasAssignedMission = false;
 
     protected override void Awake()
     {
         base.Awake();
-
         if (!sceneHooked)
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -46,7 +45,6 @@ public class MissionManager : BaseManager<MissionManager>
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-
         if (scene.name == "TheLastRefuge")
         {
             ResetMissionState();
@@ -78,9 +76,6 @@ public class MissionManager : BaseManager<MissionManager>
 
     public void AssignNewMission()
     {
-        if (hasAssignedMission) return;
-        hasAssignedMission = true;
-
         if (missions == null || missions.Count == 0)
         {
             Debug.LogWarning("No missions available to assign!");
@@ -96,13 +91,12 @@ public class MissionManager : BaseManager<MissionManager>
             return;
         }
 
+        missionState = MissionState.InProgress;
+        missionActive = true;
         progress = 0;
         timer = currentMission.timeLimit;
-        missionActive = true;
-        missionState = MissionState.InProgress;
 
         Debug.Log($"NEW MISSION: {currentMission.missionName} - {currentMission.description}");
-
         UIManager.Instance.ShowMission(currentMission.missionName, timer, progress, currentMission.requiredAmount);
 
         if (currentMission.missionType == MissionData.MissionType.StealthSurvive)
@@ -120,10 +114,7 @@ public class MissionManager : BaseManager<MissionManager>
         activeSoundObj.transform.localPosition = Vector3.zero;
 
         AudioSource source = activeSoundObj.GetComponent<AudioSource>();
-        if (source != null)
-        {
-            source.Play();
-        }
+        if (source != null) source.Play();
     }
 
     public void UpdateProgress()
@@ -132,14 +123,15 @@ public class MissionManager : BaseManager<MissionManager>
 
         progress++;
         Debug.Log($"PROGRESS: {progress}/{currentMission.requiredAmount}");
-
         UIManager.Instance.UpdateMissionProgress(progress, currentMission.requiredAmount);
 
         if (progress >= currentMission.requiredAmount)
         {
-            MissionCompleted();
+            Debug.Log("Mission objective met, waiting for timer to finish.");
+            missionObjectiveMet = true;
         }
     }
+
 
     public void WrongAction()
     {
@@ -150,37 +142,39 @@ public class MissionManager : BaseManager<MissionManager>
     {
         Debug.Log($"MISSION SUCCESS: {currentMission.missionName}!");
         missionState = MissionState.Completed;
+        missionActive = false;
         RemoveStealthSound();
+        UIManager.Instance.ShowMissionComplete();
+        StartCoroutine(StartPrepareNextMission());
     }
 
     private void CheckMissionResult()
     {
         if (!missionActive) return;
 
-        var type = currentMission.missionType;
+        missionActive = false;
 
-        if (type == MissionData.MissionType.Survive || type == MissionData.MissionType.StealthSurvive)
+        if (missionObjectiveMet)
         {
             MissionCompleted();
-            missionActive = false;
-            UIManager.Instance.ShowMissionComplete();
-            StartCoroutine(StartPrepareNextMission());
-            return;
-        }
-
-        if (missionState == MissionState.Completed)
-        {
-            Debug.Log("MISSION COMPLETE AFTER TIMER!");
-            missionActive = false;
-            UIManager.Instance.ShowMissionComplete();
-            StartCoroutine(StartPrepareNextMission());
         }
         else
         {
-            Debug.Log("MISSION FAILED AFTER TIMER!");
-            MissionFailed();
+
+            if (currentMission.missionType == MissionData.MissionType.Survive ||
+                currentMission.missionType == MissionData.MissionType.StealthSurvive)
+            {
+                Debug.Log("Survivor mission time completed! Success!");
+                MissionCompleted();
+            }
+            else
+            {
+                MissionFailed();
+            }
         }
     }
+
+
 
     private IEnumerator StartPrepareNextMission()
     {
@@ -197,8 +191,8 @@ public class MissionManager : BaseManager<MissionManager>
     private IEnumerator PrepareNextMission()
     {
         Debug.Log("WAITING 10 SECONDS BEFORE NEXT MISSION...");
-        int countdown = 10;
 
+        int countdown = 10;
         while (countdown > 0)
         {
             UIManager.Instance.UpdateMissionTimer(countdown);
@@ -206,6 +200,7 @@ public class MissionManager : BaseManager<MissionManager>
             countdown--;
         }
 
+        ResetMissionState();
         AssignNewMission();
     }
 
@@ -216,13 +211,14 @@ public class MissionManager : BaseManager<MissionManager>
         ThirdPersonController player = FindFirstObjectByType<ThirdPersonController>();
         if (player != null) player.KillPlayer();
 
-        missionActive = false;
         missionState = MissionState.Failed;
+        missionActive = false;
 
         GameManager.Instance.OnPlayerMissionFailed();
         RemoveStealthSound();
-
         UIManager.Instance.ShowGameOver();
+
+        StartCoroutine(StartPrepareNextMission());
     }
 
     void RemoveStealthSound()
@@ -247,9 +243,10 @@ public class MissionManager : BaseManager<MissionManager>
         timer = 0;
         missionActive = false;
         missionState = MissionState.NotStarted;
+        missionObjectiveMet = false;
         RemoveStealthSound();
-        hasAssignedMission = false;
     }
+
 
     public MissionData GetCurrentMission() => currentMission;
     public int GetProgress() => progress;

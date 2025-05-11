@@ -1,6 +1,4 @@
-﻿// File: UIManager.cs
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
@@ -24,9 +22,14 @@ public class UIManager : BaseManager<UIManager>
     public Button mainMenuButton;
     public Button playAgainButton;
 
+    public GameObject pausePanel;
+    public Button resumeButton;
+
     protected override void Awake()
     {
         base.Awake();
+        resumeButton.onClick.AddListener(ResumeGame);
+        mainMenuButton.onClick.AddListener(LoadMenuScene);
         audioSource = gameObject.AddComponent<AudioSource>();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -58,11 +61,17 @@ public class UIManager : BaseManager<UIManager>
     {
         HandleMissionDisplay();
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePausePanel();
+        }
+
         if (missionCompletePanel.activeSelf && Input.GetKeyDown(KeyCode.R))
         {
             ReloadCurrentScene();
         }
     }
+
 
     private void HandleMissionDisplay()
     {
@@ -115,6 +124,23 @@ public class UIManager : BaseManager<UIManager>
     public void ShowGameOver()
     {
         StartCoroutine(ShowGameOverPanel());
+    }
+    private void TogglePausePanel()
+    {
+        bool isActive = pausePanel.activeSelf;
+        pausePanel.SetActive(!isActive);
+
+        Time.timeScale = isActive ? 1f : 0f; 
+        Cursor.lockState = isActive ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !isActive;
+    }
+
+    private void ResumeGame()
+    {
+        pausePanel.SetActive(false);
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private IEnumerator ShowGameOverPanel()
@@ -271,6 +297,9 @@ public class UIManager : BaseManager<UIManager>
 
         mainMenuButton.gameObject.SetActive(false);
         playAgainButton.gameObject.SetActive(false);
+
+        pausePanel.SetActive(false);
+        Time.timeScale = 1f;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class EnemyHealth : MonoBehaviour
 {
@@ -14,10 +15,31 @@ public class EnemyHealth : MonoBehaviour
     [Header("Hit Sound")]
     public AudioClip hitSound;
 
+    [Header("UI")]
+    public GameObject healthBarUIPrefab; // Prefab chứa Canvas + Slider
+    private GameObject healthBarUIInstance;
+    private Slider healthSlider;
+
     void Start()
     {
         currentHealth = maxHealth;
         animator = GetComponent<Animator>();
+
+        if (healthBarUIPrefab != null)
+        {
+            healthBarUIInstance = Instantiate(healthBarUIPrefab, transform.position + Vector3.up * 2f, Quaternion.identity);
+            healthSlider = healthBarUIInstance.GetComponentInChildren<Slider>();
+            healthSlider.value = 1f;
+        }
+    }
+
+    void Update()
+    {
+        if (healthBarUIInstance != null)
+        {
+            healthBarUIInstance.transform.position = transform.position + Vector3.up * 2f;
+            healthBarUIInstance.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward);
+        }
     }
 
     public void TakeDamage(float damage, string weaponType)
@@ -25,6 +47,11 @@ public class EnemyHealth : MonoBehaviour
         if (isDead) return;
 
         currentHealth -= damage;
+
+        if (healthSlider != null)
+        {
+            healthSlider.value = currentHealth / maxHealth;
+        }
 
         if (weaponType == "axe" && hitByAxeEffectPrefab != null)
         {
@@ -55,6 +82,12 @@ public class EnemyHealth : MonoBehaviour
         if (isDead) return;
 
         isDead = true;
+
+        if (healthBarUIInstance != null)
+        {
+            Destroy(healthBarUIInstance);
+        }
+
         animator.ResetTrigger("Attack");
         animator.ResetTrigger("Hit");
         animator.SetBool("Die", true);

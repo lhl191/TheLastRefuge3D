@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class AnimalHealth : MonoBehaviour
 {
@@ -16,18 +17,44 @@ public class AnimalHealth : MonoBehaviour
     [Header("Hit Sound")]
     public AudioClip hitSound;
 
+    [Header("UI")]
+    public GameObject healthBarUIPrefab; 
+    private GameObject healthBarUIInstance;
+    private Slider healthSlider;
+    public Transform healthBarAnchor;
+
     void Start()
     {
         currentHealth = maxHealth;
         animator = GetComponent<Animator>();
         animalAI = GetComponent<AnimalAI>();
+
+        if (healthBarUIPrefab != null && healthBarAnchor != null)
+        {
+            healthBarUIInstance = Instantiate(healthBarUIPrefab, healthBarAnchor.position, Quaternion.identity);
+            healthSlider = healthBarUIInstance.GetComponentInChildren<Slider>();
+            healthSlider.value = 1f;
+        }
     }
 
+    void Update()
+    {
+        if (healthBarUIInstance != null && healthBarAnchor != null)
+        {
+            healthBarUIInstance.transform.position = healthBarAnchor.position;
+            healthBarUIInstance.transform.forward = Camera.main.transform.forward;
+        }
+    }
     public void TakeDamage(float damage, string weaponType)
     {
         if (isDead) return;
 
         currentHealth -= damage;
+
+        if (healthSlider != null)
+        {
+            healthSlider.value = currentHealth / maxHealth;
+        }
 
         if (weaponType == "axe" && hitByAxeEffectPrefab != null)
         {
@@ -64,6 +91,11 @@ public class AnimalHealth : MonoBehaviour
 
         isDead = true;
         animator?.SetBool("Die", true);
+
+        if (healthBarUIInstance != null)
+        {
+            Destroy(healthBarUIInstance);
+        }
 
         animalAI?.OnDeath();
 

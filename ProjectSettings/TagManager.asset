@@ -50,6 +50,12 @@ TagManager:
   - name: Enemy
     uniqueID: 677941897
     locked: 0
+  - name: Animal
+    uniqueID: 447142131
+    locked: 0
+  - name: BOSS
+    uniqueID: 504086951
+    locked: 0
   m_RenderingLayers:
   - Default
   - Light Layer 1

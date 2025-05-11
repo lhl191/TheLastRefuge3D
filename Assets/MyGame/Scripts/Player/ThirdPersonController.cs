@@ -219,12 +219,16 @@ public class ThirdPersonController : MonoBehaviour
     IEnumerator DieCoroutine()
     {
         isDead = true;
+        SwitchWeapon("noWeapon");
+
         animator.SetBool("Die", true);
 
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
 
-        this.enabled = false; 
+        this.enabled = false;
     }
+
+
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Interactable")) 
