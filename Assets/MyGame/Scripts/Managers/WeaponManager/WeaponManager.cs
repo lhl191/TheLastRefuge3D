@@ -1,5 +1,3 @@
-// Assets/MyGame/Scripts/Managers/WeaponManager/WeaponManager.cs
-
 using UnityEngine;
 
 public static class WeaponManager

@@ -28,7 +28,7 @@ public class RewardUIManager : BaseManager<RewardUIManager>
             rewardImage.sprite = rewardSprite;
             rewardPanel.SetActive(true);
 
-            // 🔥 Unlock + Hiện chuột khi hiện Reward
+          
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
@@ -40,7 +40,7 @@ public class RewardUIManager : BaseManager<RewardUIManager>
         {
             rewardPanel.SetActive(false);
 
-            // 🔥 Khoá + Ẩn chuột lại khi tắt Reward
+      
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }

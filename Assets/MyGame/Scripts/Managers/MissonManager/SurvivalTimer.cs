@@ -23,7 +23,7 @@ public class SurvivalTimer : MonoBehaviour
             if (survivalTime <= 0)
             {
                 isActive = false;
-                MissionManager.Instance.MissionFailed(); // Gọi MissionFailed() khi hết thời gian
+                MissionManager.Instance.MissionFailed(); 
             }
         }
     }

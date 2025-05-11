@@ -11,9 +11,11 @@ public class UIManager : BaseManager<UIManager>
     public GameObject missionPanel;
     public TMP_Text missionText;
     public TMP_Text timerText;
+    public TMP_Text progressText;
 
     public GameObject gameOverPanel;
     public GameObject missionCompletePanel;
+    public TMP_Text victoryReasonText;
     public AudioClip missionCompleteSFX;
     public AudioClip gameOverSFX;
 
@@ -22,20 +24,44 @@ public class UIManager : BaseManager<UIManager>
     public Button mainMenuButton;
     public Button playAgainButton;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        audioSource = gameObject.AddComponent<AudioSource>();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
     private void Start()
     {
-        missionPanel.SetActive(false);
-        gameOverPanel.SetActive(false);
-        missionCompletePanel.SetActive(false); 
-        mainMenuButton.gameObject.SetActive(false);
-        playAgainButton.gameObject.SetActive(false);
+        if (Instance != this) return;
+        ResetUI();
+    }
 
-        audioSource = gameObject.AddComponent<AudioSource>();
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        ResetUI();
+
+        var slider = GameObject.FindWithTag("HealthBar");
+        var player = Object.FindFirstObjectByType<PlayerHealth>();
+        if (player != null && slider != null)
+        {
+            player.AssignHealthBar(slider.GetComponent<Slider>());
+        }
     }
 
     private void Update()
     {
         HandleMissionDisplay();
+
+        if (missionCompletePanel.activeSelf && Input.GetKeyDown(KeyCode.R))
+        {
+            ReloadCurrentScene();
+        }
     }
 
     private void HandleMissionDisplay()
@@ -43,6 +69,17 @@ public class UIManager : BaseManager<UIManager>
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             missionPanel.SetActive(true);
+
+            var mission = MissionManager.Instance.GetCurrentMission();
+            if (mission != null)
+            {
+                UIManager.Instance.ShowMission(
+                    mission.missionName,
+                    mission.timeLimit,
+                    MissionManager.Instance.GetProgress(),
+                    mission.requiredAmount
+                );
+            }
         }
         else if (Input.GetKeyUp(KeyCode.Tab))
         {
@@ -50,15 +87,24 @@ public class UIManager : BaseManager<UIManager>
         }
     }
 
-    public void ShowMission(string missionName, float time)
+    public void ShowMission(string missionName, float time, int currentProgress = 0, int required = 0)
     {
         missionText.text = "MISSION: " + missionName;
         UpdateMissionTimer(time);
+        UpdateMissionProgress(currentProgress, required);
     }
 
     public void UpdateMissionTimer(float time)
     {
         timerText.text = "TIME: " + Mathf.Ceil(time);
+    }
+
+    public void UpdateMissionProgress(int current, int total)
+    {
+        if (progressText == null) return;
+
+        progressText.text = $"Progress: {current}/{total}";
+        progressText.gameObject.SetActive(true);
     }
 
     public void ShowMissionComplete()
@@ -86,6 +132,57 @@ public class UIManager : BaseManager<UIManager>
 
         mainMenuButton.onClick.AddListener(LoadMenuScene);
         playAgainButton.onClick.AddListener(ReloadCurrentScene);
+
+        gameOverPanel.SetActive(true);
+        mainMenuButton.gameObject.SetActive(true);
+        playAgainButton.gameObject.SetActive(true);
+
+        CanvasGroup cg = gameOverPanel.GetComponent<CanvasGroup>();
+        if (cg != null)
+        {
+            cg.alpha = 1f;
+            cg.blocksRaycasts = true;
+            cg.interactable = true;
+        }
+    }
+
+    public void ShowMissionCompleteSuccess()
+    {
+        victoryReasonText.text = "MISSION SUCCESS!";
+        StartCoroutine(ShowVictoryPanel());
+    }
+
+    public void ShowVictory()
+    {
+        victoryReasonText.text = "ALL ENEMIES DEFEATED ! VICTORY !!!";
+        StartCoroutine(ShowVictoryPanel());
+    }
+
+    private IEnumerator ShowVictoryPanel()
+    {
+        yield return StartCoroutine(ShowPanelTemporary(missionCompletePanel, missionCompleteSFX));
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        mainMenuButton.gameObject.SetActive(true);
+        playAgainButton.gameObject.SetActive(true);
+
+        mainMenuButton.onClick.RemoveAllListeners();
+        playAgainButton.onClick.RemoveAllListeners();
+
+        mainMenuButton.onClick.AddListener(LoadMenuScene);
+        playAgainButton.onClick.AddListener(ReloadCurrentScene);
+
+        missionCompletePanel.SetActive(true);
+
+        CanvasGroup cg = missionCompletePanel.GetComponent<CanvasGroup>();
+        if (cg != null)
+        {
+            cg.alpha = 1f;
+            cg.blocksRaycasts = true;
+            cg.interactable = true;
+        }
     }
 
     private IEnumerator ShowPanelTemporary(GameObject groupPanel, AudioClip clip)
@@ -97,16 +194,20 @@ public class UIManager : BaseManager<UIManager>
         }
 
         groupPanel.SetActive(true);
-        PlaySFX(clip);
+        canvasGroup.blocksRaycasts = true;
+        canvasGroup.interactable = true;
 
+        PlaySFX(clip);
         yield return StartCoroutine(FadeCanvasGroup(canvasGroup, 0f, 1f, 0.5f));
         yield return new WaitForSeconds(4f);
         yield return StartCoroutine(FadeCanvasGroup(canvasGroup, 1f, 0f, 0.5f));
+
+        canvasGroup.blocksRaycasts = false;
+        canvasGroup.interactable = false;
+        groupPanel.SetActive(false);
     }
 
-
-
-private IEnumerator FadeCanvasGroup(CanvasGroup canvasGroup, float startAlpha, float endAlpha, float duration)
+    private IEnumerator FadeCanvasGroup(CanvasGroup canvasGroup, float startAlpha, float endAlpha, float duration)
     {
         float elapsed = 0f;
         canvasGroup.alpha = startAlpha;
@@ -131,30 +232,47 @@ private IEnumerator FadeCanvasGroup(CanvasGroup canvasGroup, float startAlpha, f
 
     public void LoadMenuScene()
     {
-        ResetAllResources();
-        HideGameOverUI();
+        ResourceManager.Instance?.ResetResourcesToDefault();
+        WeaponManager.CurrentWeapon = WeaponManager.WeaponType.NoWeapon;
+        MissionManager.Instance?.ResetMissionState();
+        GameManager.Instance?.ResetGameState();
+
+        var player = Object.FindFirstObjectByType<PlayerHealth>();
+        if (player != null) player.ResetHealth();
+
+        ResetUI();
         SceneManager.LoadScene("MenuGameTheLastRefuge", LoadSceneMode.Single);
     }
 
-    private void ReloadCurrentScene()
+    public void ReloadCurrentScene()
     {
-        ResetAllResources();
-        HideGameOverUI();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+        if (MissionManager.Instance != null)
+        {
+            MissionManager.Instance.ResetMissionState();
+            MissionManager.Instance.StopAllCoroutines();
+        }
+
+        ResourceManager.Instance?.ResetResourcesToDefault();
+        WeaponManager.CurrentWeapon = WeaponManager.WeaponType.NoWeapon;
+        GameManager.Instance?.ResetGameState();
+
+        var player = Object.FindFirstObjectByType<PlayerHealth>();
+        if (player != null) player.ResetHealth();
+
+        ResetUI();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    private void HideGameOverUI()
+    public void ResetUI()
     {
-        gameOverPanel.SetActive(false);
+        missionPanel.SetActive(false);
         missionCompletePanel.SetActive(false);
+        gameOverPanel.SetActive(false);
+
+        mainMenuButton.gameObject.SetActive(false);
+        playAgainButton.gameObject.SetActive(false);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-    }
-
-
-    private void ResetAllResources()
-    {
-        ResourceManager.Instance.ResetResourcesToDefault();
     }
 }

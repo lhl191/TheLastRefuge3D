@@ -6,9 +6,11 @@ public class PlayerHealth : MonoBehaviour
 {
     public float maxHealth = 100f;
     private float currentHealth;
+
     [SerializeField] private Slider healthBar;
     private Animator animator;
     public bool isDead = false;
+    public bool isReady = false;
 
     [Header("Hit Effect Prefab")]
     public GameObject hitEffectPrefab;
@@ -19,18 +21,49 @@ public class PlayerHealth : MonoBehaviour
 
     void Start()
     {
-        currentHealth = maxHealth;
-        healthBar.maxValue = maxHealth;
-        healthBar.value = currentHealth;
         animator = GetComponent<Animator>();
+        StartCoroutine(WaitForHealthBarAndReset());
+    }
+
+    IEnumerator WaitForHealthBarAndReset()
+    {
+        int retries = 10;
+        while (healthBar == null && retries-- > 0)
+        {
+            var go = GameObject.FindWithTag("HealthBar");
+            if (go != null)
+                healthBar = go.GetComponent<Slider>();
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        if (healthBar == null)
+            Debug.LogWarning("❌ PlayerHealth: healthBar is NULL after retries");
+
+        ResetHealth();
+        isReady = true;
+    }
+
+    public void AssignHealthBar(Slider slider)
+    {
+        healthBar = slider;
     }
 
     public void TakeDamage(float damage)
     {
+        if (!isReady)
+        {
+            Debug.LogWarning("⚠️ PlayerHealth: Not ready yet, skipping damage.");
+            return;
+        }
+
         if (isDead) return;
 
         currentHealth -= damage;
-        healthBar.value = currentHealth;
+
+        if (healthBar != null)
+            healthBar.value = currentHealth;
+        else
+            Debug.LogWarning("❌ PlayerHealth: healthBar is NULL in TakeDamage!");
 
         animator.SetBool("isHit", true);
 
@@ -82,5 +115,23 @@ public class PlayerHealth : MonoBehaviour
     {
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
         animator.speed = 0;
+    }
+
+    public void ResetHealth()
+    {
+        isDead = false;
+        currentHealth = maxHealth;
+
+        if (healthBar != null)
+        {
+            healthBar.maxValue = maxHealth;
+            healthBar.value = currentHealth;
+        }
+
+        animator.SetBool("Die", false);
+        animator.speed = 1f;
+        GetComponent<ThirdPersonController>().enabled = true;
+        animator.applyRootMotion = false;
+        this.enabled = true;
     }
 }

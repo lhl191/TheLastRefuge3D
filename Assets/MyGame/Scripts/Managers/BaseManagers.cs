@@ -1,43 +1,40 @@
 ﻿using UnityEngine;
 
-public abstract class BaseManager<T> : MonoBehaviour where T : MonoBehaviour
+public class BaseManager<T> : MonoBehaviour where T : MonoBehaviour
 {
-    private static T _instance;
-
+    private static T instance;
     public static T Instance
     {
         get
         {
-            if (_instance == null)
+            if (instance == null)
             {
-                _instance = Object.FindAnyObjectByType<T>();
-                if (_instance == null)
+                instance = Object.FindFirstObjectByType<T>();
+                if (instance == null)
                 {
-                    GameObject obj = new GameObject(typeof(T).Name);
-                    _instance = obj.AddComponent<T>();
+                    GameObject obj = new GameObject();
+                    obj.name = typeof(T).Name;
+                    instance = obj.AddComponent<T>();
                 }
             }
-            return _instance;
+            return instance;
+        }
+        protected set
+        {
+            instance = value;
         }
     }
 
     protected virtual void Awake()
     {
-        if (_instance == null)
+        if (instance == null)
         {
-            _instance = this as T;
-
-            if (transform.parent != null)
-            {
-                transform.SetParent(null); 
-            }
-
+            Instance = this as T; 
             DontDestroyOnLoad(gameObject);
         }
-        else
+        else if (instance != this)
         {
             Destroy(gameObject);
         }
     }
-
 }

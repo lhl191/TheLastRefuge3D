@@ -9,6 +9,7 @@ TagManager:
   - Boss
   - Animal
   - Pet
+  - HealthBar
   layers:
   - Default
   - TransparentFX
